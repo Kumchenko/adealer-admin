@@ -1,6 +1,8 @@
+import { DesignColor } from '@/interfaces'
 import { HTMLAttributeAnchorTarget, MouseEventHandler } from 'react'
 
-export type IButton = React.PropsWithChildren<{
+export type ButtonProps = React.PropsWithChildren<{
+    color: DesignColor
     className?: string
     disabled?: boolean
     href?: string

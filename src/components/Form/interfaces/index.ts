@@ -1,26 +1,35 @@
 import { FormikContextType } from 'formik'
-import {
-    ChangeEventHandler,
-    FocusEventHandler,
-    HTMLInputTypeAttribute,
-} from 'react'
+import { HTMLInputTypeAttribute } from 'react'
 
-export type IForm = React.PropsWithChildren<{
+export type FormProps = React.PropsWithChildren<{
     className?: string
     formik: FormikContextType<any>
 }>
 
-export type IFormInput = {
-    label: string
+export type FormFieldProps = {
+    label?: string
     name: string
-    id: string
+    id?: string
     className?: string
-    type?: HTMLInputTypeAttribute
+    type: HTMLInputTypeAttribute
     placeholder?: string
     pattern?: string
     autoComplete?: string
     required?: boolean
     disabled?: boolean
-    onChange?: ChangeEventHandler<HTMLInputElement>
-    onBlur?: FocusEventHandler<HTMLInputElement>
+}
+
+export type FormRadioProps = {
+    label: string
+    name: string
+    id?: string
+    className?: string
+    value: string
+}
+
+export type FormCheckboxProps = {
+    label: string
+    name: string
+    id?: string
+    className?: string
 }

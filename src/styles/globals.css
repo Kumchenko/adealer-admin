@@ -2,3 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    position: relative;
+    box-sizing: border-box;
+    font-variant-numeric: lining-nums;
+}
+
+@layer components {
+    button {
+        @apply transition-colors;
+    }
+}

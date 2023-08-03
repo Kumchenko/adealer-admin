@@ -1,10 +1,15 @@
 'use client'
 import Button from '@/components/Button/Button'
 import { Form, FormInput } from '@/components/Form'
+import { DesignColor } from '@/interfaces'
+import { useLoginEmployeeMutation } from '@/services/employee'
 import { useFormik } from 'formik'
+import { useRouter } from 'next/navigation'
 import * as Yup from 'yup'
 
 const LoginForm = () => {
+    const [loginEmployee] = useLoginEmployeeMutation()
+    const router = useRouter()
     const initialValues = {
         login: '',
         password: '',
@@ -16,31 +21,16 @@ const LoginForm = () => {
     const formik = useFormik({
         initialValues,
         validationSchema,
-        onSubmit: values => console.log(values),
+        onSubmit: values => {
+            loginEmployee(values).then(() => router.push('/dashboard'))
+        },
     })
 
     return (
         <Form formik={formik} className="flex flex-col gap-4">
-            <h5 className="text-center text-h5 font-semibold">
-                Employee Auth Data
-            </h5>
-            <FormInput
-                label="Username"
-                name="login"
-                id="login"
-                placeholder="Username"
-            />
-            <FormInput
-                label="Password"
-                name="password"
-                id="password"
-                type="password"
-                placeholder="Password"
-            />
-            <Button
-                className="mx-auto bg-green text-green-white hover:bg-green-light active:bg-green-dark"
-                type="submit"
-            >
+            <FormInput label="Username" name="login" type="text" placeholder="Username" />
+            <FormInput label="Password" name="password" type="password" placeholder="Password" />
+            <Button className="mx-auto" color={DesignColor.Green} onClick={() => formik.submitForm()}>
                 Log In
             </Button>
         </Form>

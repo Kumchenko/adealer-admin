@@ -1,11 +1,12 @@
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export default function Home() {
-    const isLogged = false
-    isLogged ? null : redirect('/login')
-    return (
-        <main>
-            <h1>You are not logged</h1>
-        </main>
-    )
+    const cookieStore = cookies()
+    const token = !!cookieStore.get('logged_in')
+    if (token) {
+        redirect('/dashboard')
+    } else {
+        redirect('/login')
+    }
 }

@@ -1,11 +1,11 @@
 import { FormikProvider } from 'formik'
-import { IForm } from './interfaces'
+import { FormProps } from './interfaces'
 
-const Form = ({ children, className, formik }: IForm) => {
+const Form = ({ children, className, formik }: FormProps) => {
     return (
-        <form className={className} onSubmit={formik.handleSubmit}>
-            <FormikProvider value={formik}>{children}</FormikProvider>
-        </form>
+        <FormikProvider value={formik}>
+            <div className={className}>{children}</div>
+        </FormikProvider>
     )
 }
 

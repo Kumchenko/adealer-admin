@@ -4,12 +4,10 @@ import LoginForm from '../LoginForm/LoginForm'
 
 const LoginSection = () => {
     return (
-        <Section>
-            <h1 className="text-center text-h1 font-medium">
-                AppleDealer Managing System
-            </h1>
-            <p className="mt-4 text-center text-2xl">Authorized access only!</p>
-            <Card className="mx-auto mt-12 w-80 px-4 py-2">
+        <Section full={true}>
+            <h1 className="text-center text-h2 font-medium sm:text-h1">AppleDealer Managing System</h1>
+            <p className="mt-4 text-center text-xl sm:text-2xl">Authorized access only!</p>
+            <Card className="mx-auto mt-8 w-5/6 px-4 py-2 sm:mt-12 sm:w-80">
                 <LoginForm />
             </Card>
         </Section>

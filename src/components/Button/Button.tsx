@@ -1,9 +1,17 @@
-import { IButton } from './interfaces'
+import { ButtonProps } from './interfaces'
 import { forwardRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { DesignColor } from '@/interfaces'
 
-const Button = forwardRef<HTMLButtonElement, IButton>(
-    ({ className, type, disabled, children, onClick, href, target }, ref) => {
+const colorVariants = {
+    [DesignColor.Green]: 'bg-green text-green-white hover:bg-green-light active:bg-green-dark',
+    [DesignColor.Red]: 'bg-red text-red-white hover:bg-red-light active:bg-red-dark',
+    [DesignColor.Violet]: 'bg-violet text-violet-white hover:bg-violet-light active:bg-violet-dark',
+    [DesignColor.Transparent]: 'bg-transparent text-current',
+}
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ className, type, disabled, children, onClick, href, target, color }, ref) => {
         const router = useRouter()
 
         const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -21,7 +29,10 @@ const Button = forwardRef<HTMLButtonElement, IButton>(
         return (
             <button
                 ref={ref}
-                className={`block rounded-2xl px-3 py-2 ${className}`}
+                className={`
+                    block rounded-2xl px-3 py-2 disabled:cursor-not-allowed disabled:bg-neutral
+                    ${colorVariants[color]} ${className}
+                `}
                 type={type}
                 disabled={disabled}
                 onClick={handleClick}

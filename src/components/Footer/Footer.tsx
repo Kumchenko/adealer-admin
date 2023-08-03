@@ -1,9 +1,7 @@
-import React from 'react'
-
 const Footer = () => {
     const currentYear = new Date().getFullYear()
     return (
-        <footer className="flex py-10">
+        <footer className="flex px-2 py-6 sm:py-8 md:py-10">
             <a
                 className="mx-auto"
                 href="https://github.com/Kumchenko/appledealer"

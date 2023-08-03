@@ -13,14 +13,19 @@ module.exports = {
             transparent: 'transparent',
             current: 'currentColor',
             white: '#ffffff',
+            neutral: colors.neutral[400],
             violet: {
                 white: colors.violet[50],
+                bright: colors.violet[200],
                 light: colors.violet[400],
                 DEFAULT: colors.violet[800],
                 dark: colors.violet[900],
             },
             red: {
+                white: colors.red[50],
+                light: colors.red[400],
                 DEFAULT: colors.red[600],
+                dark: colors.red[700]
             },
             green: {
                 white: colors.green[50],
@@ -33,13 +38,16 @@ module.exports = {
             center: true,
         },
         extend: {
+            blur: {
+                xs: '2px'
+            },
             backgroundImage: {
                 'light-gradient':
                     'linear-gradient(95deg, rgba(196,181,253,1) 0%, rgba(245,208,254,1) 100%)',
             },
             fontSize: {
                 h1: ['3.3rem', { lineHeight: 1 }],
-                h2: defaultTheme.fontSize['6xl'],
+                h2: defaultTheme.fontSize['5xl'],
                 h3: defaultTheme.fontSize['4xl'],
                 h4: defaultTheme.fontSize['3xl'],
                 h5: defaultTheme.fontSize['2xl'],

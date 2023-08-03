@@ -1,6 +1,7 @@
-'use client'
+import { FormFieldProps } from './interfaces'
+import { useId } from 'react'
+import { getDateTimeInputValue } from '@/utils'
 import { useFormikContext } from 'formik'
-import { IFormInput } from './interfaces'
 
 const FormInput = ({
     label,
@@ -13,52 +14,42 @@ const FormInput = ({
     autoComplete,
     required,
     disabled,
-    onChange,
-    onBlur,
-}: IFormInput) => {
-    const { handleBlur, handleChange, getFieldProps, getFieldMeta } =
-        useFormikContext()
-
+}: FormFieldProps) => {
+    const { handleBlur, handleChange, getFieldProps, getFieldMeta } = useFormikContext()
     const { value } = getFieldProps(name)
     const { error, touched } = getFieldMeta(name)
 
+    const elementId = id ? id : useId()
+
     return (
-        <div className={className}>
-            <div className="flex justify-between">
-                <label className="shrink-0" htmlFor={id}>
-                    {label}
-                </label>
-                <span
-                    className={`text-center text-red ${
-                        error && touched ? 'block' : 'hidden'
-                    }`}
-                >
-                    {error}
-                </span>
-            </div>
+        <div className={`grid grid-cols-2 gap-1 ${className}`}>
+            {label ? <label htmlFor={elementId}>{label}</label> : null}
+            <span
+                className={`
+                 text-red 
+                ${label ? 'justify-self-end' : 'order-1 col-span-2 text-center'}
+                ${error && touched ? 'block' : 'hidden'}
+            `}
+            >
+                {error}
+            </span>
             <input
                 className={`
-                    mt-1 w-full rounded-2xl border bg-transparent  px-3 py-1
-                    placeholder:text-violet-light
+                    col-span-2
+                    rounded-2xl border bg-white px-3 py-1 placeholder:text-violet-light
                     ${error && touched ? 'border-red' : 'border-current'}
                 `}
-                value={value}
+                value={type === 'datetime-local' ? getDateTimeInputValue(value) : value}
                 name={name}
-                id={id}
+                id={elementId}
                 type={type}
                 placeholder={placeholder}
                 pattern={pattern}
                 autoComplete={autoComplete}
                 required={required}
                 disabled={disabled}
-                onChange={e => {
-                    handleChange(e)
-                    onChange ? onChange(e) : null
-                }}
-                onBlur={e => {
-                    handleBlur(e)
-                    onBlur ? onBlur(e) : null
-                }}
+                onChange={handleChange}
+                onBlur={handleBlur}
             />
         </div>
     )
