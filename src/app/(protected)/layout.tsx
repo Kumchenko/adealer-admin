@@ -6,9 +6,9 @@ import { PropsWithChildren } from 'react'
 const Layout = ({ children }: PropsWithChildren) => {
     const cookieStore = cookies()
     const token = !!cookieStore.get('logged_in')
+    console.log(`Token: ${token} Check value: ${!token}`)
     if (!token) {
-        console.log(`Token: ${token} Check value: ${!token}`)
-        redirect('/logout')
+        // redirect('/logout')
     }
     return (
         <div className="lg:flex">
