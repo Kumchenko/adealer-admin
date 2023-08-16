@@ -9,7 +9,10 @@ import { useGetModelsQuery } from '@/services/model'
 import { useDeleteOrderMutation, useUpdateOrderMutation } from '@/services/order'
 import { useGetServicesQuery } from '@/services/service'
 import { useAppDispatch } from '@/store'
-import { useUpdate, modelIdConverter, useOptions, idToString } from '@/utils'
+import { idToString } from '@/utils/idToString'
+import { modelIdConverter } from '@/utils/stringConverter'
+import { useOptions } from '@/utils/useOptions'
+import { useUpdate } from '@/utils/useUpdate'
 import { FormikProvider, useFormik } from 'formik'
 import { useRouter } from 'next/navigation'
 import { memo, useMemo } from 'react'
@@ -147,7 +150,7 @@ const OrderForm = ({ order: orderObj }: { order: OrderData }) => {
                     ) : (
                         <span>No operations – Just created</span>
                     )}
-                    <div className="grid grid-cols-3 items-start gap-2">
+                    <div className="grid grid-cols-[repeat(auto-fit,_minmax(0,_1fr))] items-start gap-2">
                         {orderStatusOptions.map(status => (
                             <Button
                                 key={status.value}

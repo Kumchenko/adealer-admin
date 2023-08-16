@@ -9,8 +9,12 @@ import Modal from '@/components/Modal/Modal'
 const raleway = Raleway({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-    title: 'AppleDealer Control',
-    description: 'AppleDealer managing system for handling orders and calls.',
+    title: {
+        default: 'Page',
+        template: '%s | ADealer Admin',
+        absolute: 'ADealer Admin',
+    },
+    description: 'AppleDealer managing system for handling orders and calls',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

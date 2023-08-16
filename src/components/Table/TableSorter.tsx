@@ -1,5 +1,5 @@
 import { Sort } from '@/constants'
-import { capitalizeFirstLetter } from '@/utils'
+import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useFormikContext } from 'formik'
 import { MouseEvent } from 'react'
