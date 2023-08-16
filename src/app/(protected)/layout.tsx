@@ -7,6 +7,7 @@ const Layout = ({ children }: PropsWithChildren) => {
     const cookieStore = cookies()
     const token = !!cookieStore.get('logged_in')
     if (!token) {
+        console.log(`Token: ${token} Check value: ${!token}`)
         redirect('/logout')
     }
     return (
