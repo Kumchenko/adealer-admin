@@ -1,4 +1,4 @@
-import { toOptions } from '@/utils'
+import { toOptions } from '@/utils/toOptions'
 
 export enum OrderFilter {
     All = 'ALL',

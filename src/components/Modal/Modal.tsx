@@ -5,7 +5,7 @@ import { ExclamationCircleIcon, XMarkIcon, InformationCircleIcon } from '@heroic
 import Card from '../Card/Card'
 import { ModalType } from '@/constants'
 import { HTMLAttributes, useEffect } from 'react'
-import { capitalizeFirstLetter } from '@/utils'
+import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter'
 
 const Modal = () => {
     const dispatch = useAppDispatch()

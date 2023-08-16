@@ -5,7 +5,8 @@ import { DesignColor, orderFilterOptions } from '@/constants'
 import { useGetComponentsQuery } from '@/services/component'
 import { useGetModelsQuery } from '@/services/model'
 import { useGetQualitiesQuery } from '@/services/quality'
-import { modelIdConverter, useOptions } from '@/utils'
+import { modelIdConverter } from '@/utils/stringConverter'
+import { useOptions } from '@/utils/useOptions'
 import { useFormikContext } from 'formik'
 
 const SearchForm = ({ className }: { className?: string }) => {

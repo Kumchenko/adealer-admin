@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter } from '@/utils'
+import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter'
 import SidebarItem from '../Sidebar/SidebarItem'
 import { BreadcrumbListProps } from './interfaces'
 import { useSelectedLayoutSegments } from 'next/navigation'

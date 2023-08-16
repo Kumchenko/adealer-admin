@@ -1,5 +1,5 @@
 import { FormFieldProps } from './interfaces'
-import { getDateTimeInputValue } from '@/utils'
+import { getDateTimeInputValue } from '@/utils/getDateTimeInputValue'
 import { useFormikContext } from 'formik'
 import { memo } from 'react'
 

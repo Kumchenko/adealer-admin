@@ -47,10 +47,7 @@ const orderApi = api.injectEndpoints({
                 url: `/auth/orders/order/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [
-                { type: 'Orders', id },
-                { type: 'Orders', id: 'PARTIAL_LIST' },
-            ],
+            invalidatesTags: (result, error, id) => [{ type: 'Orders', id: 'PARTIAL_LIST' }],
         }),
     }),
 })
