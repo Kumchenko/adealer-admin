@@ -5,7 +5,7 @@ import { PropsWithChildren } from 'react'
 
 const Layout = ({ children }: PropsWithChildren) => {
     const cookieStore = cookies()
-    const token = !!cookieStore.get('logged_in')
+    const token = cookieStore.get('logged_in')
     console.log(`Token: ${token} Check value: ${!token}`)
     if (!token) {
         // redirect('/logout')
