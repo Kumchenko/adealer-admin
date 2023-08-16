@@ -70,10 +70,15 @@ const OrderForm = ({ order: orderObj }: { order: OrderData }) => {
     // Retrieving needed data
     const { data: models } = useGetModelsQuery()
     const { data: components } = useGetComponentsQuery(values.modelId)
-    const { data: services } = useGetServicesQuery({
-        modelId: values.modelId,
-        componentId: values.componentId,
-    })
+    const { data: services } = useGetServicesQuery(
+        {
+            modelId: values.modelId,
+            componentId: values.componentId,
+        },
+        {
+            skip: !values.modelId || !values.componentId,
+        },
+    )
 
     // Preparing arrays of objects for select options
     const modelOptions = useOptions(models, modelIdConverter)

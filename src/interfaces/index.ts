@@ -151,5 +151,5 @@ export type Modal = {
 }
 
 export type AsyncModal = Modal & {
-    seconds?: number
+    milliSeconds?: number
 }
