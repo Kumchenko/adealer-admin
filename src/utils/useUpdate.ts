@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useRef } from 'react'
 
 const useUpdate = (fn: () => void, deps: Array<any>) => {

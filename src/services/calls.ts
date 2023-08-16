@@ -20,6 +20,12 @@ const callsApi = api.injectEndpoints({
                       ]
                     : [{ type: 'Calls', id: 'PARTIAL_LIST' }],
         }),
+        getCall: build.query<CallData, number>({
+            query: id => ({
+                url: `/auth/callmes/callme/${id}`,
+            }),
+            providesTags: (result, error, id) => [{ type: 'Calls', id }],
+        }),
         getCallStats: build.query<CallStats, void>({
             query: () => ({
                 url: `/auth/callmes/stats`,
@@ -43,12 +49,10 @@ const callsApi = api.injectEndpoints({
                 url: `/auth/callmes/callme/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [
-                { type: 'Calls', id },
-                { type: 'Calls', id: 'PARTIAL_LIST' },
-            ],
+            invalidatesTags: (result, error, id) => [{ type: 'Calls', id: 'PARTIAL_LIST' }],
         }),
     }),
 })
 
-export const { useGetCallsQuery, useGetCallStatsQuery, useUpdateCallMutation, useDeleteCallMutation } = callsApi
+export const { useGetCallsQuery, useGetCallQuery, useGetCallStatsQuery, useUpdateCallMutation, useDeleteCallMutation } =
+    callsApi

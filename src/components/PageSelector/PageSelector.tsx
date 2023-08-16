@@ -1,4 +1,4 @@
-import { paginate } from '@/utils'
+import { paginate } from '@/utils/paginate'
 import { MouseEvent, useCallback, useMemo } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { PageSelectorProps } from './interfaces'

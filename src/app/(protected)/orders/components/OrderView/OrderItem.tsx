@@ -1,4 +1,5 @@
-import { baseIdConverter, idToString, modelIdConverter } from '@/utils'
+import { baseIdConverter, modelIdConverter } from '@/utils/stringConverter'
+import { idToString } from '@/utils/idToString'
 import { OrderItemProps } from './interfaces'
 import Card from '@/components/Card/Card'
 import Button from '@/components/Button/Button'

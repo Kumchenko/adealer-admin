@@ -1,4 +1,4 @@
-import { baseIdConverter, modelIdConverter } from '@/utils'
+import { baseIdConverter, modelIdConverter } from '@/utils/stringConverter'
 import { WrenchIcon, PhoneArrowUpRightIcon, DevicePhoneMobileIcon, CpuChipIcon } from '@heroicons/react/24/outline'
 import { PieChart } from 'react-minimal-pie-chart'
 import DashboardCard from './DashboardCard'
