@@ -1,7 +1,7 @@
 import { FormFieldProps } from './interfaces'
-import { useId } from 'react'
 import { getDateTimeInputValue } from '@/utils'
 import { useFormikContext } from 'formik'
+import { memo } from 'react'
 
 const FormInput = ({
     label,
@@ -19,15 +19,13 @@ const FormInput = ({
     const { value } = getFieldProps(name)
     const { error, touched } = getFieldMeta(name)
 
-    const elementId = id ? id : useId()
-
     return (
-        <div className={`grid grid-cols-2 gap-1 ${className}`}>
-            {label ? <label htmlFor={elementId}>{label}</label> : null}
+        <div className={`grid-cols-[auto auto] grid w-full gap-2 ${className}`}>
+            {label ? <label htmlFor={id}>{label}</label> : null}
             <span
                 className={`
-                 text-red 
-                ${label ? 'justify-self-end' : 'order-1 col-span-2 text-center'}
+                 break-words text-red
+                ${label ? 'justify-self-end text-right' : 'order-1 col-span-2 text-center'}
                 ${error && touched ? 'block' : 'hidden'}
             `}
             >
@@ -36,12 +34,14 @@ const FormInput = ({
             <input
                 className={`
                     col-span-2
+                    h-[2.125rem] w-full
                     rounded-2xl border bg-white px-3 py-1 placeholder:text-violet-light
-                    ${error && touched ? 'border-red' : 'border-current'}
+                    ${error && touched ? 'border-red text-red placeholder:text-red-light' : 'border-current'}
+                    ${type === 'datetime-local' ? 'bg-calendar bg-select bg-no-repeat pr-8' : null}
                 `}
                 value={type === 'datetime-local' ? getDateTimeInputValue(value) : value}
                 name={name}
-                id={elementId}
+                id={id}
                 type={type}
                 placeholder={placeholder}
                 pattern={pattern}
@@ -55,4 +55,4 @@ const FormInput = ({
     )
 }
 
-export { FormInput }
+export default memo(FormInput)

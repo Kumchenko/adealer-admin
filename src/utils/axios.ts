@@ -3,20 +3,38 @@ import { BaseQueryFn } from '@reduxjs/toolkit/query'
 import { Mutex } from 'async-mutex'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { AxiosRequestConfig } from 'axios'
+import { clearEmptyParams } from './clearEmptyParams'
+import { logoutRedirect } from './logoutRedirect'
+
+declare module 'axios' {
+    export interface AxiosRequestConfig {
+        retry?: boolean
+    }
+}
 
 const axiosInstance = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_API}/api`,
     timeout: 1000 * 60,
     withCredentials: true,
 })
-let count = 0
+
 const mutex = new Mutex()
+
+axiosInstance.interceptors.request.use(
+    function ({ params, ...config }) {
+        return {
+            params: params ? clearEmptyParams(params) : undefined,
+            ...config,
+        }
+    },
+    error => error,
+)
 
 axiosInstance.interceptors.response.use(
     response => response,
     async (error: AxiosError) => {
         // Catch 401 Error
-        if (error.response?.status === 401) {
+        if (error.response?.status === 401 && !error.config?.retry) {
             // Saving initial request config
             const config = error.config
             if (!mutex.isLocked()) {
@@ -26,24 +44,29 @@ axiosInstance.interceptors.response.use(
                 try {
                     await axiosInstance('/employee/refresh')
                 } catch (e) {
-                    window.open('/logout', '_self')
+                    logoutRedirect()
                     return Promise.reject(e)
                 } finally {
                     release()
                 }
             } else {
-                return Promise.reject(error)
+                // If locked when reauth - error, else - wait for unlock
+                if (config?.url === '/employee/refresh') {
+                    return Promise.reject(error)
+                } else {
+                    await mutex.waitForUnlock()
+                }
             }
 
             // Try to retry request
             try {
                 // Retry request
                 if (config) {
-                    const retryResult = await axiosInstance(config)
-                    return retryResult
-                } else Promise.reject(error)
+                    config.retry = true
+                    return await axiosInstance(config)
+                } else return Promise.reject(error)
             } catch (e) {
-                window.open('/logout', '_self')
+                logoutRedirect()
                 return Promise.reject(e)
             }
         }

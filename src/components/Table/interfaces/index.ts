@@ -1,4 +1,6 @@
-export type Cell = number | string | null | JSX.Element
+import { PropsWithChildren } from 'react'
+
+export type Cell = number | string
 
 export type Row = Cell[]
 
@@ -25,11 +27,10 @@ export type TableRowProps = {
     data: Row
 }
 
-export type TableCellProps = {
+export type TableCellProps = PropsWithChildren<{
     className?: string
     header: Header
-    data: Cell
-}
+}>
 
 export type TableSorterProps = {
     className?: string

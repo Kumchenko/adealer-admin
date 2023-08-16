@@ -1,12 +1,16 @@
-import React, { forwardRef } from 'react'
+import { forwardRef, memo } from 'react'
 import { CardProps } from './interfaces'
 
-const Card = forwardRef<HTMLDivElement, CardProps>(({ className, children }: CardProps, ref) => {
+const Card = forwardRef<HTMLDivElement, CardProps>(({ className, children, onClick }: CardProps, ref) => {
     return (
-        <div ref={ref} className={`${className} overflow-hidden rounded-3xl border bg-violet-white`}>
+        <div
+            ref={ref}
+            onClick={onClick}
+            className={`${className} overflow-hidden rounded-3xl border bg-violet-white p-4`}
+        >
             {children}
         </div>
     )
 })
 
-export default Card
+export default memo(Card)

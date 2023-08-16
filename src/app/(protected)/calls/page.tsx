@@ -3,67 +3,73 @@ import { useGetCallsQuery } from '@/services/calls'
 import Table from '../../../components/Table/Table'
 import PageSelector from '@/components/PageSelector/PageSelector'
 import loading from '@/app/loading'
-import AmountSelector from '@/components/AmountSelector/AmountSelector'
-import { itemsAmounts } from '@/constants'
+import { CallTableHeaders, callsPerPage, pollingInterval } from '@/constants'
 import { FormikProvider, useFormik } from 'formik'
 import Section from '@/components/Section/Section'
-import { useEffect } from 'react'
+import { useDeferredValue, useEffect, useMemo } from 'react'
 import SearchForm from './components/SearchForm/SearchForm'
-import { CallField, Sort } from '@/interfaces'
+import { CallField, CallFilter, Sort } from '@/constants'
+import ErrorCard from '@/components/ErrorCard/ErrorCard'
+import { GetCallsArgs } from '@/interfaces'
+import FormSelector from '@/components/Form/FormSelector'
 
 const Calls = () => {
-    const initialValues = {
+    const initialValues: GetCallsArgs = {
         id: '',
         name: '',
         tel: '',
-        filter: 'all',
-        page: 1,
-        perPage: 5,
-        apply: false,
         from: '',
         to: '',
+        filter: CallFilter.All,
+        page: 1,
+        perPage: callsPerPage[0],
+        apply: false,
         sort: Sort.Asc,
         sortBy: CallField.ID,
     }
-    const formik = useFormik({
+    const formik = useFormik<GetCallsArgs>({
         initialValues,
         onSubmit: () => {},
     })
 
+    // Destructuring some formik data
     const { values, setFieldValue } = formik
 
-    const { calls, headers, pages, actions, isLoading, isFetching, isError, isSuccess, isUninitialized } =
-        useGetCallsQuery(
-            {
-                ...values,
-                apply: values.apply ? true : undefined,
-            },
-            {
-                selectFromResult: ({ data, ...other }) => ({
-                    actions: data ? data.data.map(call => `/calls/${call.id}`) : null, // Generating hrefs for action buttons
-                    headers: data ? Object.keys(data.data[0]) : null, // Headers for Table
-                    calls: data?.data // Normalizing data for Table
-                        .map(call => ({
-                            ...call,
-                            created: new Date(call.created).toLocaleString(),
-                            checked: call.checked
-                                ? new Date(call.checked).toLocaleString()
-                                : new Date(0).toLocaleString().replace(/\w/g, '–'),
-                        }))
-                        .map(call => Object.values(call)),
-                    pages: data?.pagination.pages, // Getting pages
-                    ...other,
-                }),
-                pollingInterval: 30000,
-            },
-        )
+    // Decreasing rerender count of Calls Table
+    const deferredValues = useDeferredValue(values)
+
+    const { calls, pages, isLoading, isFetching, isError, isSuccess, isUninitialized, refetch } = useGetCallsQuery(
+        deferredValues,
+        {
+            selectFromResult: ({ data, ...other }) => ({
+                calls: data?.data,
+                pages: data?.pagination.pages,
+                ...other,
+            }),
+            pollingInterval,
+        },
+    )
+
+    const [items, actions] = useMemo(
+        () => [
+            calls
+                ?.map(call => ({
+                    ...call,
+                    created: new Date(call.created).toLocaleString(),
+                    checked: call.checked
+                        ? new Date(call.checked).toLocaleString()
+                        : new Date(0).toLocaleString().replace(/\w/g, '–'),
+                }))
+                .map(call => Object.values(call)),
+            calls?.map(({ id }) => `/calls/${id}`),
+        ],
+        [calls],
+    )
 
     // Set First page when pages count changed
     useEffect(() => {
-        if (pages && values.page > pages) {
-            setFieldValue('page', 1)
-        }
-    }, [values.page, pages])
+        setFieldValue('page', 1)
+    }, [pages])
 
     return (
         <FormikProvider value={formik}>
@@ -71,21 +77,22 @@ const Calls = () => {
                 <h3 className="text-center text-h3 font-semibold">Requested Calls</h3>
                 <SearchForm />
                 {isLoading || isUninitialized ? loading() : null}
-                {isSuccess && calls && actions && headers ? (
+                {isSuccess && items && actions ? (
                     <Table
                         className={`${isFetching && 'opacity-85 blur-xs saturate-50'}`}
-                        data={calls}
-                        headers={headers}
+                        data={items}
+                        headers={CallTableHeaders}
                         actions={actions}
                     />
                 ) : null}
+                {isError ? <ErrorCard reset={refetch} /> : null}
                 <div className="flex justify-center gap-5">
-                    <AmountSelector
-                        changeAmount={amount => setFieldValue('perPage', amount)}
-                        amount={values.perPage}
-                        amounts={itemsAmounts}
+                    <FormSelector id="perPage" label="Calls" name="perPage" options={callsPerPage} />
+                    <PageSelector
+                        changePage={page => setFieldValue('page', page)}
+                        page={deferredValues.page}
+                        pages={pages}
                     />
-                    <PageSelector changePage={page => setFieldValue('page', page)} page={values.page} pages={pages} />
                 </div>
             </Section>
         </FormikProvider>

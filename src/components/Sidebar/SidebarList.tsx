@@ -8,7 +8,7 @@ const SidebarList = () => {
     const { open, endpoints } = useContext(SidebarContext)
 
     return (
-        <nav className={`${!open && 'h-0'}`}>
+        <nav className={`${!open && 'max-lg:h-0'}`}>
             <ul
                 className={`
                         ${!open && 'max-lg:invisible max-lg:opacity-0'}

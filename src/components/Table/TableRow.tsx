@@ -1,8 +1,9 @@
 import Button from '@/components/Button/Button'
-import { DesignColor } from '@/interfaces'
+import { DesignColor } from '@/constants'
 import { PencilSquareIcon } from '@heroicons/react/20/solid'
 import TableCell from './TableCell'
 import { TableRowProps } from './interfaces'
+import { memo } from 'react'
 
 const TableRow = ({ data, headers, action }: TableRowProps) => {
     return (
@@ -12,23 +13,22 @@ const TableRow = ({ data, headers, action }: TableRowProps) => {
                 max-sm:bg-violet-bright sm:odd:bg-violet-white max-sm:even:[&>td]:bg-violet-white"
         >
             {data.map((cell, index) => (
-                <TableCell key={index} header={headers[index]} data={cell} />
+                <TableCell key={cell} header={headers[index]}>
+                    {cell}
+                </TableCell>
             ))}
-            <TableCell
-                header="Action"
-                data={
-                    <Button
-                        color={DesignColor.Violet}
-                        className="mx-auto !rounded-xl !p-1"
-                        href={action}
-                        aria-label="Edit call"
-                    >
-                        <PencilSquareIcon className="h-5 w-5" />
-                    </Button>
-                }
-            />
+            <TableCell header="Action">
+                <Button
+                    color={DesignColor.Violet}
+                    className="mx-auto !rounded-xl !p-1"
+                    href={action}
+                    aria-label="Edit call"
+                >
+                    <PencilSquareIcon className="h-5 w-5" />
+                </Button>
+            </TableCell>
         </tr>
     )
 }
 
-export default TableRow
+export default memo(TableRow)

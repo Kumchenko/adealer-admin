@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import TableHeaderCell from './TableHeaderCell'
 import TableRow from './TableRow'
 import { TableProps } from './interfaces'
@@ -9,19 +10,19 @@ const Table = ({ className, headers, data, actions }: TableProps) => {
         >
             <thead className="max-sm:hidden">
                 <tr className="[&>*]:p-3 [&>*]:font-semibold">
-                    {headers.map((header, index) => (
-                        <TableHeaderCell key={index} value={header} />
+                    {headers.map(header => (
+                        <TableHeaderCell key={header} value={header} />
                     ))}
                     <th key="action">Action</th>
                 </tr>
             </thead>
             <tbody className="rounded-3xl max-sm:flex max-sm:flex-col max-sm:gap-4">
                 {data.map((row, index) => (
-                    <TableRow key={index} action={actions[index]} headers={headers} data={row} />
+                    <TableRow key={actions[index]} action={actions[index]} headers={headers} data={row} />
                 ))}
             </tbody>
         </table>
     )
 }
 
-export default Table
+export default memo(Table)

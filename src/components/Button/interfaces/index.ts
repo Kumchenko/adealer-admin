@@ -1,4 +1,4 @@
-import { DesignColor } from '@/interfaces'
+import { DesignColor } from '@/constants'
 import { HTMLAttributeAnchorTarget, MouseEventHandler } from 'react'
 
 export type ButtonProps = React.PropsWithChildren<{
@@ -6,6 +6,7 @@ export type ButtonProps = React.PropsWithChildren<{
     className?: string
     disabled?: boolean
     href?: string
+    isLoading?: boolean
     type?: 'button' | 'submit' | 'reset'
     target?: HTMLAttributeAnchorTarget
     onClick?: MouseEventHandler<HTMLButtonElement>

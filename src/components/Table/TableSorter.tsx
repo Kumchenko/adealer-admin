@@ -1,4 +1,4 @@
-import { Sort } from '@/interfaces'
+import { Sort } from '@/constants'
 import { capitalizeFirstLetter } from '@/utils'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useFormikContext } from 'formik'

@@ -1,3 +1,5 @@
+import { CallField, CallFilter, OrderFilter, OrderStatus, Sort, ModalType } from '@/constants'
+
 export type LoginEmployeeArgs = {
     login: string
     password: string
@@ -15,39 +17,6 @@ export type AxiosBaseQuery = {
 export type AxiosBaseQueryError = {
     status: number
     data: string
-}
-
-export enum LoadingStatus {
-    Idle = 'idle',
-    Fetching = 'fetching',
-    Fetched = 'fetched',
-    Error = 'error',
-}
-
-export enum CallField {
-    ID = 'id',
-    Name = 'name',
-    Tel = 'tel',
-    Created = 'created',
-    Checked = 'checked',
-}
-
-export enum CallFilter {
-    All = 'all',
-    Created = 'created',
-    Checked = 'checked',
-}
-
-export enum DesignColor {
-    Violet = 'violet',
-    Red = 'red',
-    Green = 'green',
-    Transparent = 'transparent',
-}
-
-export enum Sort {
-    Asc = 'asc',
-    Desc = 'desc',
 }
 
 export type CallData = {
@@ -70,7 +39,7 @@ export type ListResponse<T> = {
     data: T[]
 }
 
-export type GetCallsArgs = Partial<{
+export type GetCallsArgs = {
     id: string
     name: string
     tel: string
@@ -79,9 +48,108 @@ export type GetCallsArgs = Partial<{
     from: string
     to: string
     apply: boolean
-}>
+    filter: CallFilter
+    sort: Sort
+    sortBy: CallField
+}
 
 export type Endpoint = {
     href: string
     title: string
+}
+
+export type ServiceData = {
+    id: number
+    modelId: string
+    componentId: string
+    qualityId: string
+    cost: number
+}
+
+export type OperationData = {
+    id: number
+    dateTime: string
+    status: string
+    orderId: number
+    employeeId: number
+    employee: EmployeeData
+}
+
+export type OrderData = {
+    id: number
+    serviceId: number
+    name: string
+    surname: string
+    tel: string
+    email: string
+    cost: number
+    created: string
+    service: ServiceData
+    operations: OperationData[]
+}
+
+export type GetOrdersArgs = {
+    id: string
+    name: string
+    surname: string
+    tel: string
+    email: string
+    modelId: string
+    componentId: string
+    qualityId: string
+    page: number
+    perPage: number
+    filter: OrderFilter
+    from: string
+    to: string
+    apply: boolean
+    sort: Sort
+}
+
+export type GetServicesArgs = {
+    modelId: string
+    componentId: string
+}
+
+export type PatchOrderArgs = {
+    modelId: string
+    componentId: string
+    qualityId: string
+    id: number
+    name: string
+    surname: string
+    tel: string
+    email: string
+    cost: number
+    status: OrderStatus
+}
+
+export type CallStats = {
+    all: number
+    created: number
+    checked: number
+}
+
+export type OrderStats = {
+    all: number
+    created: number
+    processing: number
+    done: number
+    model: string
+    component: string
+}
+
+export type ModalArgs = Partial<Omit<Modal, 'key'>>
+
+export type AsyncModalArgs = Partial<AsyncModal & ModalArgs>
+
+export type Modal = {
+    key: number
+    type: ModalType
+    title?: string
+    description?: string
+}
+
+export type AsyncModal = Modal & {
+    seconds?: number
 }

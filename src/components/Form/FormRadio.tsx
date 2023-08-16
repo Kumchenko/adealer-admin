@@ -1,12 +1,10 @@
-import { useId } from 'react'
+import { memo } from 'react'
 import { FormRadioProps } from './interfaces'
 import { useFormikContext } from 'formik'
 
 const FormRadio = ({ label, name, id, className, value }: FormRadioProps) => {
-    const { handleBlur, handleChange, getFieldProps, getFieldMeta } = useFormikContext()
+    const { handleBlur, handleChange, getFieldProps } = useFormikContext()
     const { value: fieldValue } = getFieldProps(name)
-
-    const elementId = id ? id : useId()
     return (
         <>
             <input
@@ -15,15 +13,15 @@ const FormRadio = ({ label, name, id, className, value }: FormRadioProps) => {
                 value={value}
                 name={name}
                 checked={fieldValue === value}
-                id={elementId}
+                id={id}
                 onChange={handleChange}
                 onBlur={handleBlur}
             />
-            <label htmlFor={elementId} className={`${fieldValue === value && 'font-bold'} ${className} cursor-pointer`}>
+            <label htmlFor={id} className={`${fieldValue === value && 'font-bold'} ${className} cursor-pointer`}>
                 {label}
             </label>
         </>
     )
 }
 
-export { FormRadio }
+export default memo(FormRadio)

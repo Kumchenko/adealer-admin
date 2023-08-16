@@ -1,7 +1,8 @@
 import { ButtonProps } from './interfaces'
-import { forwardRef } from 'react'
+import { forwardRef, memo } from 'react'
 import { useRouter } from 'next/navigation'
-import { DesignColor } from '@/interfaces'
+import { DesignColor } from '@/constants'
+import Spinner from '../Spinner/Spinner'
 
 const colorVariants = {
     [DesignColor.Green]: 'bg-green text-green-white hover:bg-green-light active:bg-green-dark',
@@ -11,7 +12,7 @@ const colorVariants = {
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ className, type, disabled, children, onClick, href, target, color }, ref) => {
+    ({ className, type, disabled, children, onClick, href, target, color, isLoading }, ref) => {
         const router = useRouter()
 
         const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -30,18 +31,19 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             <button
                 ref={ref}
                 className={`
-                    block rounded-2xl px-3 py-2 disabled:cursor-not-allowed disabled:bg-neutral
+                block
+                    rounded-2xl px-3 py-2 disabled:cursor-not-allowed disabled:bg-neutral
                     ${colorVariants[color]} ${className}
                 `}
                 type={type}
                 disabled={disabled}
                 onClick={handleClick}
             >
-                {children}
+                {isLoading ? <Spinner className="h-6" /> : children}
             </button>
         )
     },
 )
 Button.displayName = 'Button'
 
-export default Button
+export default memo(Button)

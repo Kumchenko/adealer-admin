@@ -19,7 +19,7 @@ const PageSelector = ({ page, pages = 0, changePage }: PageSelectorProps) => {
             paginate(page, pages).map((pageNum, id) =>
                 pageNum > 0 ? (
                     <li
-                        key={id}
+                        key={pageNum}
                         className={`${
                             pageNum === page && 'bg-violet font-semibold text-violet-white'
                         } flex h-6 w-6 items-center justify-center rounded-full text-sm`}

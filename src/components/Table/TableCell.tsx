@@ -1,7 +1,8 @@
+import { memo } from 'react'
 import { TableCellProps } from './interfaces'
 import TableSorter from './TableSorter'
 
-const TableCell = ({ className, data, header }: TableCellProps) => {
+const TableCell = ({ className, children, header }: TableCellProps) => {
     return (
         <td
             className={`
@@ -10,9 +11,9 @@ const TableCell = ({ className, data, header }: TableCellProps) => {
             `}
         >
             <TableSorter className="sm:hidden" value={header} />
-            <span className="max-sm:text-right">{data}</span>
+            <span className="max-sm:text-right">{children}</span>
         </td>
     )
 }
 
-export default TableCell
+export default memo(TableCell)

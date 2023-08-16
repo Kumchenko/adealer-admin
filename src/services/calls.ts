@@ -1,11 +1,11 @@
-import { CallData, GetCallsArgs, ListResponse } from '@/interfaces'
+import { CallData, CallStats, GetCallsArgs, ListResponse } from '@/interfaces'
 import api from '.'
 
 const callsApi = api.injectEndpoints({
     endpoints: build => ({
-        getCalls: build.query<ListResponse<CallData>, GetCallsArgs>({
-            query: ({ from, to, ...params }) => ({
-                url: `/auth/callme/`,
+        getCalls: build.query<ListResponse<CallData>, Partial<GetCallsArgs>>({
+            query: ({ from, to, apply, ...params }) => ({
+                url: `/auth/callmes/`,
                 params: {
                     from: from ? new Date(from).toISOString() : undefined,
                     to: to ? new Date(to).toISOString() : undefined,
@@ -20,9 +20,14 @@ const callsApi = api.injectEndpoints({
                       ]
                     : [{ type: 'Calls', id: 'PARTIAL_LIST' }],
         }),
+        getCallStats: build.query<CallStats, void>({
+            query: () => ({
+                url: `/auth/callmes/stats`,
+            }),
+        }),
         updateCall: build.mutation<CallData, Partial<CallData> & Pick<CallData, 'id'>>({
             query: ({ id, created, checked, ...data }) => ({
-                url: `/auth/callme/${id}`,
+                url: `/auth/callmes/callme/${id}`,
                 method: 'PATCH',
                 data: {
                     created: created ? new Date(created).toISOString() : undefined,
@@ -35,7 +40,7 @@ const callsApi = api.injectEndpoints({
         }),
         deleteCall: build.mutation<CallData, number>({
             query: id => ({
-                url: `/auth/callme/${id}`,
+                url: `/auth/callmes/callme/${id}`,
                 method: 'DELETE',
             }),
             invalidatesTags: (result, error, id) => [
@@ -46,4 +51,4 @@ const callsApi = api.injectEndpoints({
     }),
 })
 
-export const { useGetCallsQuery, useUpdateCallMutation, useDeleteCallMutation } = callsApi
+export const { useGetCallsQuery, useGetCallStatsQuery, useUpdateCallMutation, useDeleteCallMutation } = callsApi

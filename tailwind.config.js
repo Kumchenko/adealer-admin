@@ -33,6 +33,9 @@ module.exports = {
                 DEFAULT: colors.green[500],
                 dark: colors.green[700],
             },
+            blue: {
+                DEFAULT: colors.indigo[600]
+            }
         },
         container: {
             center: true,
@@ -44,6 +47,10 @@ module.exports = {
             backgroundImage: {
                 'light-gradient':
                     'linear-gradient(95deg, rgba(196,181,253,1) 0%, rgba(245,208,254,1) 100%)',
+                'polygon': 
+                    'url(\'/img/polygon.svg\')',
+                'calendar': 
+                    'url(\'/img/calendar.svg\')'
             },
             fontSize: {
                 h1: ['3.3rem', { lineHeight: 1 }],
@@ -53,6 +60,9 @@ module.exports = {
                 h5: defaultTheme.fontSize['2xl'],
                 h6: defaultTheme.fontSize['xl'],
             },
+            backgroundPosition: {
+                'select': 'right .375rem center'
+            }
         },
     },
     plugins: [],
