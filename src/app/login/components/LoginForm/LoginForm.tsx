@@ -1,13 +1,14 @@
 'use client'
 import Button from '@/components/Button/Button'
-import Card from '@/components/Card/Card'
 import { Form, FormInput } from '@/components/Form'
-import { DesignColor, ModalType } from '@/constants'
+import { DesignColor, failedCrossSiteModalParams } from '@/constants'
 import { useLoginEmployeeMutation } from '@/services/employee'
-import { openModal, showModal } from '@/services/modal'
+import { showModal } from '@/services/modal'
 import { useAppDispatch } from '@/store'
+import { axiosInstance } from '@/utils/axios'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import * as Yup from 'yup'
 
 const LoginForm = () => {
@@ -37,6 +38,19 @@ const LoginForm = () => {
                 .then(() => router.push('/dashboard'))
         },
     })
+
+    useEffect(() => {
+        const checkCrossSite = async () => {
+            try {
+                await axiosInstance('/employee/connect')
+                await axiosInstance('/employee/test')
+            } catch {
+                dispatch(showModal(...failedCrossSiteModalParams))
+            }
+        }
+
+        checkCrossSite()
+    }, [])
 
     return (
         <Form formik={formik} className="flex flex-col gap-4">

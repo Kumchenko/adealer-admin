@@ -28,7 +28,7 @@ const CallForm = ({ call }: { call: CallData }) => {
             .max(32, ({ max }) => `Max ${max} letters`)
             .required('Required'),
         tel: Yup.string()
-            .matches(/[+]{1}38[0]{1}[0-9]{9}/, 'Incorrect format')
+            .matches(/^[+]{1}38[0]{1}[0-9]{9}$/, 'Incorrect format')
             .required('Required'),
         created: Yup.date().max(new Date(), 'Future date').required('Required'),
         checked: Yup.date().max(new Date(), 'Future date').nullable(),

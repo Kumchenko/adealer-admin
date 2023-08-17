@@ -25,10 +25,14 @@ const Modal = () => {
             className={`
             ${show ? 'visible opacity-100' : 'pointer-events-none invisible opacity-0'}
             absolute left-0 top-0 z-50 flex h-[100vh] w-[100vw] flex-col items-center justify-center
-            gap-4 p-8 backdrop-blur-sm backdrop-brightness-90 transition-opacity sm:items-end sm:justify-end`}
+            gap-4 p-8 backdrop-blur-sm backdrop-brightness-90 transition-opacity md:items-end md:justify-end`}
         >
             {modals.map(({ title, description, type, key }) => (
-                <Card onClick={e => e.stopPropagation()} className={`${getStyle(type)} min-w-[140px]`} key={key}>
+                <Card
+                    onClick={e => e.stopPropagation()}
+                    className={`${getStyle(type)} min-w-[140px] md:max-w-md`}
+                    key={key}
+                >
                     <button onClick={e => dispatch(closeModal(key))} className="absolute right-0 top-0 z-10 p-2">
                         <XMarkIcon className="h-6 w-6" />
                     </button>
@@ -36,7 +40,7 @@ const Modal = () => {
                         {getIcon(type)}
                         <h5 className="text-h5 font-semibold">{title || capitalizeFirstLetter(type)}</h5>
                     </div>
-                    <p>{description}</p>
+                    <p className="whitespace-break-spaces">{description}</p>
                 </Card>
             ))}
         </div>
