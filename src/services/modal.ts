@@ -16,11 +16,11 @@ const initialState: IInitialState = {
 
 const showModal = createAsyncThunk(
     'modal/showModal',
-    async ({ seconds = modalTimeout, ...modal }: AsyncModalArgs, { dispatch }) => {
+    async ({ milliSeconds = modalTimeout, ...modal }: AsyncModalArgs, { dispatch }) => {
         dispatch(openModal(modal))
         setTimeout(() => {
             dispatch(closeModal())
-        }, seconds * 1000)
+        }, milliSeconds)
     },
 )
 

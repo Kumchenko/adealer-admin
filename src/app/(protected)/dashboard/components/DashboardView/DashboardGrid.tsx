@@ -31,7 +31,7 @@ const DashboardGrid = ({ orderStats, callStats }: DashboardGridProps) => {
                     lengthAngle={-360}
                     startAngle={270}
                     rounded={true}
-                    label={({ dataEntry }) => `${Math.round(dataEntry.percentage)}% – ${dataEntry.value}`}
+                    label={({ dataEntry }) => (dataEntry.value ? `${Math.round(dataEntry.percentage)}%` : '')}
                     labelPosition={140}
                     labelStyle={{ fontSize: 12, fill: '#5b21b6' }}
                     background="#ddd6fe"
@@ -41,13 +41,16 @@ const DashboardGrid = ({ orderStats, callStats }: DashboardGridProps) => {
                 />
                 <ul className="mt-2 text-sm">
                     <li className="flex items-center gap-1">
-                        <span className="block h-3 w-3 rounded-lg bg-violet"></span>- Done
+                        <span className="block h-3 w-3 rounded-lg bg-violet"></span>
+                        {`– Done (${orderStats.done} orders)`}
                     </li>
                     <li className="flex items-center gap-1">
-                        <span className="block h-3 w-3 rounded-lg bg-violet-light"></span>- Processing
+                        <span className="block h-3 w-3 rounded-lg bg-violet-light"></span>
+                        {`– Processing (${orderStats.processing} orders)`}
                     </li>
                     <li className="flex items-center gap-1">
-                        <span className="block h-3 w-3 rounded-lg bg-violet-bright"></span>- Created
+                        <span className="block h-3 w-3 rounded-lg bg-violet-bright"></span>
+                        {`– Created (${orderStats.created} orders)`}
                     </li>
                 </ul>
             </DashboardCard>

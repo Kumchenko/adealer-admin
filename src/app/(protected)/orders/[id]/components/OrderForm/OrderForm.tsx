@@ -47,7 +47,7 @@ const OrderForm = ({ order: orderObj }: { order: OrderData }) => {
             .max(32, ({ max }) => `Max ${max} letters`)
             .required('Required'),
         tel: Yup.string()
-            .matches(/[+]{1}38[0]{1}[0-9]{9}/, 'Incorrect format')
+            .matches(/^[+]{1}38[0]{1}[0-9]{9}$/, 'Incorrect format')
             .required('Required'),
         email: Yup.string()
             .matches(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/, 'Incorrect format')
@@ -70,10 +70,15 @@ const OrderForm = ({ order: orderObj }: { order: OrderData }) => {
     // Retrieving needed data
     const { data: models } = useGetModelsQuery()
     const { data: components } = useGetComponentsQuery(values.modelId)
-    const { data: services } = useGetServicesQuery({
-        modelId: values.modelId,
-        componentId: values.componentId,
-    })
+    const { data: services } = useGetServicesQuery(
+        {
+            modelId: values.modelId,
+            componentId: values.componentId,
+        },
+        {
+            skip: !values.modelId || !values.componentId,
+        },
+    )
 
     // Preparing arrays of objects for select options
     const modelOptions = useOptions(models, modelIdConverter)
