@@ -1,4 +1,4 @@
-import { CallField, CallFilter, OrderFilter, OrderStatus, Sort, ModalType } from '@/constants'
+import { CallField, CallFilter, OrderFilter, OrderStatus, Sort, ModalType, OrderSortBy } from '@/constants'
 
 export type LoginEmployeeArgs = {
     login: string
@@ -104,6 +104,7 @@ export type GetOrdersArgs = {
     to: string
     apply: boolean
     sort: Sort
+    sortBy: OrderSortBy
 }
 
 export type GetServicesArgs = {

@@ -41,7 +41,7 @@ const SearchForm = ({ className }: { className?: string }) => {
                 className="order-2 col-span-12 sm:col-span-6 md:col-span-3"
                 name="apply"
                 id="apply"
-                label="For Filter date"
+                label="Date for Filter"
             />
             <Button
                 className="order-2 col-span-12 sm:col-span-6 md:col-span-3"

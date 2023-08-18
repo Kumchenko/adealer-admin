@@ -4,7 +4,7 @@ import api from '.'
 const callsApi = api.injectEndpoints({
     endpoints: build => ({
         getCalls: build.query<ListResponse<CallData>, Partial<GetCallsArgs>>({
-            query: ({ from, to, apply, ...params }) => ({
+            query: ({ from, to, ...params }) => ({
                 url: `/auth/callmes/`,
                 params: {
                     from: from ? new Date(from).toISOString() : undefined,

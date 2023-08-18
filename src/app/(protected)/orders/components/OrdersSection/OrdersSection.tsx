@@ -3,7 +3,15 @@ import loading from '@/app/loading'
 import ErrorCard from '@/components/ErrorCard/ErrorCard'
 import PageSelector from '@/components/PageSelector/PageSelector'
 import Section from '@/components/Section/Section'
-import { OrderFilter, Sort, orderSortByOptions, ordersPerPage, pollingInterval, sortOptions } from '@/constants'
+import {
+    OrderFilter,
+    OrderSortBy,
+    Sort,
+    orderSortByOptions,
+    ordersPerPage,
+    pollingInterval,
+    sortOptions,
+} from '@/constants'
 import { FormikProvider, useFormik } from 'formik'
 import { useDeferredValue, useEffect, useMemo } from 'react'
 import { useGetOrdersQuery } from '@/services/order'
@@ -29,6 +37,7 @@ const OrderSection = () => {
         from: '',
         to: '',
         sort: Sort.Asc,
+        sortBy: OrderSortBy.ID,
     }
 
     const formik = useFormik<GetOrdersArgs>({
