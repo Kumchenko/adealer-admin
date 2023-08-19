@@ -3,6 +3,7 @@
 # ADealer Admin
 
 [Live Demo](https://adealer-admin.vercel.app/login)
+
 _Use admin/admin credentials for it_
 
 #### Summary
@@ -18,9 +19,9 @@ This projects implements:
 -   Login and Logout pages which provide **Authorization** Flow.
 -   **Reauthorization** Flow using Axios interceptors with access and refresh tokens.
 -   Dashboard page which show basic statistics using **Pie Charts** about Orders and Calls such as count of all, created, processing or done items, popular service.
--   Universal configurable **modal window** for notifying about successful operations, errors or making suggestions for Employee while working with this admin panel
+-   Universal configurable **modal window** for notifying about successful operations, errors or making suggestions for Employee while working with this admin panel.
 -   **Controlled forms** with validation.
--   **Responsive design** for tablets and phones
+-   **Responsive design** for tablets and phones.
 
 #### Technology stack
 
@@ -147,9 +148,13 @@ Here you cant see how Modal window looks.
 
 ![Error modal](https://github.com/Kumchenko/adealer-admin/assets/60291758/6c2848c9-b032-460f-8723-7d0aed2e5d75)
 
+---
+
 ## Notes
 
 If you here, then you have read this README till this paragraph. Some basic must-have operations are implemented in this panel, other additional operations you can do through Prisma Studio of your [ADealer Server](https://github.com/Kumchenko/adealer-server) or implement them in this panel by yourself.
+
+---
 
 ## Contacts
 
