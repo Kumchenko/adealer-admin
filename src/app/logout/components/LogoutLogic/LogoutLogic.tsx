@@ -4,12 +4,13 @@ import { useEffect } from 'react'
 import { useAppDispatch } from '@/store'
 import api from '@/services'
 import { axiosLogout } from '@/utils/axios'
+import Api from '@/api'
 
 const LogoutLogic = () => {
     const dispatch = useAppDispatch()
     const router = useRouter()
     useEffect(() => {
-        axiosLogout()
+        Api.Employee.logout()
             .then(() => {
                 dispatch(api.util.resetApiState())
             })

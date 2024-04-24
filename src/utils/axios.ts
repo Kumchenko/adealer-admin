@@ -44,7 +44,7 @@ axiosInstance.interceptors.response.use(
                 try {
                     await axiosInstance('/employee/refresh')
                 } catch (e) {
-                    logoutRedirect()
+                    // logoutRedirect()
                     return Promise.reject(e)
                 } finally {
                     release()
@@ -66,7 +66,7 @@ axiosInstance.interceptors.response.use(
                     return await axiosInstance(config)
                 } else return Promise.reject(error)
             } catch (e) {
-                logoutRedirect()
+                // logoutRedirect()
                 return Promise.reject(e)
             }
         }
