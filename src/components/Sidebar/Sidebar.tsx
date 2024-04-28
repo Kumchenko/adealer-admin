@@ -22,7 +22,7 @@ const Sidebar = ({ className }: SidebarProps) => {
                     open &&
                     'max-lg:fixed max-lg:left-0 max-lg:top-0 max-lg:z-20 max-lg:h-screen max-lg:w-screen max-lg:p-5'
                 }
-                max-w-full overflow-hidden border-violet-light bg-violet-white px-4 py-2
+                max-w-full overflow-hidden border-violet-400 bg-violet-50 px-4 py-2
                 shadow max-lg:border-b lg:w-1/4 lg:border-r lg:py-4
             `}
         >

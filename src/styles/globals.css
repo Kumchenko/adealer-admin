@@ -1,18 +1,4 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-* {
-    position: relative;
-    box-sizing: border-box;
-    font-variant-numeric: lining-nums;
-}
-
-@layer components {
-    button {
-        @apply transition-colors;
-    }
-    input[type='datetime-local']::-webkit-calendar-picker-indicator {
-        @apply absolute right-1 cursor-pointer appearance-none opacity-0;
-    }
-}
+  

@@ -35,8 +35,8 @@ const FormInput = ({
                 className={`
                     col-span-2
                     h-[2.125rem] w-full
-                    rounded-2xl border bg-white px-3 py-1 placeholder:text-violet-light
-                    ${error && touched ? 'border-red text-red placeholder:text-red-light' : 'border-current'}
+                    rounded-2xl border bg-white px-3 py-1 placeholder:text-violet-400
+                    ${error && touched ? 'border-red text-red-600 placeholder:text-red-400' : 'border-current'}
                     ${type === 'datetime-local' ? 'bg-calendar bg-select bg-no-repeat pr-8' : null}
                 `}
                 value={type === 'datetime-local' ? getDateTimeInputValue(value) : value}

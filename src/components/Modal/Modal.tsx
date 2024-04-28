@@ -65,7 +65,7 @@ const getIcon = (type: ModalType) => {
 const getStyle = (type: ModalType): HTMLAttributes<HTMLDivElement>['className'] => {
     switch (type) {
         case ModalType.Info: {
-            return 'text-blue'
+            return 'text-indigo-600'
         }
         case ModalType.Error: {
             return 'text-red'

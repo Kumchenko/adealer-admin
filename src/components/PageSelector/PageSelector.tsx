@@ -21,7 +21,7 @@ const PageSelector = ({ page, pages = 0, changePage }: PageSelectorProps) => {
                     <li
                         key={pageNum}
                         className={`${
-                            pageNum === page && 'bg-violet font-semibold text-violet-white'
+                            pageNum === page && 'bg-violet-800 font-semibold text-violet-50'
                         } flex h-6 w-6 items-center justify-center rounded-full text-sm`}
                     >
                         <button onClick={handleClick}>{pageNum}</button>
@@ -34,11 +34,11 @@ const PageSelector = ({ page, pages = 0, changePage }: PageSelectorProps) => {
     )
 
     return (
-        <div className="flex items-center justify-center gap-1 rounded-3xl border bg-violet-white px-2 py-1">
+        <div className="flex items-center justify-center gap-1 rounded-3xl border bg-violet-50 px-2 py-1">
             {pages >= 1 ? (
                 <>
                     <button
-                        className="disabled:text-violet-light"
+                        className="disabled:text-violet-400"
                         aria-label="Previous page"
                         disabled={page === 1}
                         onClick={() => changePage(page - 1)}
@@ -47,7 +47,7 @@ const PageSelector = ({ page, pages = 0, changePage }: PageSelectorProps) => {
                     </button>
                     <ul className="flex items-center justify-center gap-2">{pageElems}</ul>
                     <button
-                        className="disabled:text-violet-light"
+                        className="disabled:text-violet-400"
                         aria-label="Next page"
                         disabled={page === pages}
                         onClick={() => changePage(page + 1)}

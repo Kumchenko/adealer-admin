@@ -1,4 +1,4 @@
-import { IEmployeeAuthorization, IEmployeeLogin } from '@/api/models/Employee'
+import { IEmployeeAuthorization, IEmployeeLogin } from 'adealer-types'
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, accessTokenMaxAge, refreshTokenMaxAge } from '@/constants/Authorization'
 import axios from 'axios'
 

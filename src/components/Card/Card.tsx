@@ -6,7 +6,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(({ className, children, onCli
         <div
             ref={ref}
             onClick={onClick}
-            className={`${className} overflow-hidden rounded-3xl border bg-violet-white p-4`}
+            className={`${className} overflow-hidden rounded-3xl border bg-violet-50 p-4`}
         >
             {children}
         </div>

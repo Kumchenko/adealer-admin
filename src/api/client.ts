@@ -2,7 +2,7 @@ import { clearEmptyParams } from '@/utils/clearEmptyParams'
 import { logoutRedirect } from '@/utils/logoutRedirect'
 import { Mutex } from 'async-mutex'
 import axios, { AxiosError } from 'axios'
-import { IEmployeeTokens } from './models/Employee'
+import { IEmployeeTokens } from 'adealer-types'
 
 const getInternalClient = () => {
     const client = axios.create({
