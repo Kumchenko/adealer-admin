@@ -7,8 +7,3 @@ export enum EApiEntity {
     CALLME = 'callmes',
     ORDER = 'orders',
 }
-
-export enum ISort {
-    Asc = 'asc',
-    Desc = 'desc',
-}

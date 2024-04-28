@@ -45,11 +45,11 @@ const DashboardGrid = ({ orderStats, callStats }: DashboardGridProps) => {
                         {`– Done (${orderStats.done} orders)`}
                     </li>
                     <li className="flex items-center gap-1">
-                        <span className="block h-3 w-3 rounded-lg bg-violet-light"></span>
+                        <span className="block h-3 w-3 rounded-lg bg-violet-400"></span>
                         {`– Processing (${orderStats.processing} orders)`}
                     </li>
                     <li className="flex items-center gap-1">
-                        <span className="block h-3 w-3 rounded-lg bg-violet-bright"></span>
+                        <span className="block h-3 w-3 rounded-lg bg-violet-200"></span>
                         {`– Created (${orderStats.created} orders)`}
                     </li>
                 </ul>

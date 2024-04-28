@@ -5,6 +5,7 @@ import Footer from '@/components/Footer/Footer'
 import { Metadata } from 'next/types'
 import { Providers } from '@/providers'
 import Modal from '@/components/Modal/Modal'
+import { cn } from '@/lib/utils'
 
 const raleway = Raleway({ subsets: ['latin'] })
 
@@ -19,14 +20,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html className="bg-violet-white" lang="en">
+        <html className="bg-violet-50" lang="en">
             <body
-                className={`${raleway.className} 
-                    min-h-screen bg-light-gradient bg-cover bg-no-repeat lining-nums text-violet`}
+                className={cn(raleway.className, 'min-h-screen bg-light-gradient bg-cover bg-no-repeat lining-nums text-violet-800')}
             >
                 <Providers>
                     <Header />
-                    <div className={`${children ? 'border-b border-t' : ''} border-violet-light`}>{children}</div>
+                    <div className={cn('border-violet-400', {['border-b border-t']: !!children})}>{children}</div>
                     <Footer />
                     <Modal />
                 </Providers>

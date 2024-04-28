@@ -5,9 +5,9 @@ import { DesignColor } from '@/constants'
 import Spinner from '../Spinner/Spinner'
 
 const colorVariants = {
-    [DesignColor.Green]: 'bg-green text-green-white hover:bg-green-light active:bg-green-dark',
-    [DesignColor.Red]: 'bg-red text-red-white hover:bg-red-light active:bg-red-dark',
-    [DesignColor.Violet]: 'bg-violet text-violet-white hover:bg-violet-light active:bg-violet-dark',
+    [DesignColor.Green]: 'bg-green-500 text-green-50 hover:bg-green-300 active:bg-green-700',
+    [DesignColor.Red]: 'bg-red-600 text-red-50 hover:bg-red-400 active:bg-red-700',
+    [DesignColor.Violet]: 'bg-violet-800 text-violet-50 hover:bg-violet-400 active:bg-violet-900',
     [DesignColor.Transparent]: 'bg-transparent text-current',
 }
 
@@ -32,7 +32,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 ref={ref}
                 className={`
                 block
-                    rounded-2xl px-3 py-2 disabled:cursor-not-allowed disabled:bg-neutral
+                    rounded-2xl px-3 py-2 disabled:cursor-not-allowed disabled:bg-neutral-400
                     ${colorVariants[color]} ${className}
                 `}
                 type={type}

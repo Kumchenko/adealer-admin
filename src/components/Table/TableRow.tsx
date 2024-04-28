@@ -10,7 +10,7 @@ const TableRow = ({ data, headers, action }: TableRowProps) => {
         <tr
             className="
                 overflow-hidden max-sm:rounded-3xl max-sm:border
-                max-sm:bg-violet-bright sm:odd:bg-violet-white max-sm:even:[&>td]:bg-violet-white"
+                max-sm:bg-violet-200 sm:odd:bg-violet-50 max-sm:even:[&>td]:bg-violet-50"
         >
             {data.map((cell, index) => (
                 <TableCell key={cell} header={headers[index]}>

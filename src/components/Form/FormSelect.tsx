@@ -35,7 +35,7 @@ const FormSelect = ({
                     rounded-2xl border
                     bg-white bg-polygon bg-select bg-no-repeat 
                     py-1 pl-3 pr-6
-                    ${error && touched ? 'border-red text-red placeholder:text-red-light' : 'border-current'}
+                    ${error && touched ? 'border-red text-red-600 placeholder:text-red-400' : 'border-current'}
                 `}
                 placeholder="Model"
                 name={name}

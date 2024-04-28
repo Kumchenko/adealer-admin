@@ -7,7 +7,7 @@ const FormSelector = ({ id, label, name, options }: FormSelectorProps) => {
     const { value } = getFieldProps(name)
 
     return (
-        <div className="flex items-baseline rounded-3xl border bg-violet-white py-1 pl-3 pr-1">
+        <div className="flex items-baseline rounded-3xl border bg-violet-50 py-1 pl-3 pr-1">
             <label htmlFor={id} className="mr-2 text-lg">
                 {label}:
             </label>

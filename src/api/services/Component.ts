@@ -1,10 +1,10 @@
 import { client } from '../client'
-import { IComponent, IComponentGetMany } from '../models/Component'
+import { IComponent, IComponentsGetQuery } from 'adealer-types'
 import { EApiEntity } from '../models/Generic'
 
 const entity = EApiEntity.COMPONENT
 
 export class ComponentService {
-    getMany = async ({ modelId }: IComponentGetMany) =>
+    getMany = async ({ modelId }: IComponentsGetQuery) =>
         (await client<IComponent[]>(`/auth/${entity}` + modelId ? `/${modelId}` : '')).data
 }

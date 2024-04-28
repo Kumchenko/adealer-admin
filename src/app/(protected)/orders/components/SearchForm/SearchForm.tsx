@@ -23,7 +23,7 @@ const SearchForm = ({ className }: { className?: string }) => {
     const { resetForm } = useFormikContext()
 
     return (
-        <Card className={`${className} grid grid-cols-12 items-end justify-items-center gap-x-4 gap-y-2 bg-violet p-4`}>
+        <Card className={`${className} grid grid-cols-12 items-end justify-items-center gap-x-4 gap-y-2 bg-violet-800 p-4`}>
             <FormInput
                 className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
                 name="id"

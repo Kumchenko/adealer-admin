@@ -6,7 +6,7 @@ import { TableProps } from './interfaces'
 const Table = ({ className, headers, data, actions }: TableProps) => {
     return (
         <table
-            className={`${className} w-full table-auto border-separate border-spacing-0 overflow-hidden rounded-3xl sm:border sm:bg-violet-bright`}
+            className={`${className} w-full table-auto border-separate border-spacing-0 overflow-hidden rounded-3xl sm:border sm:bg-violet-200`}
         >
             <thead className="max-sm:hidden">
                 <tr className="[&>*]:p-3 [&>*]:font-semibold">

@@ -13,25 +13,24 @@ import ErrorCard from '@/components/ErrorCard/ErrorCard'
 import { GetCallsArgs } from '@/interfaces'
 import FormSelector from '@/components/Form/FormSelector'
 import { useCallMes } from '@/api/queries/CallMe/queries'
-import { ECallMeFilter, ECallMeSortField, ICallMeGetMany } from '@/api/models/CallMe'
-import { ISort } from '@/api/models/Generic'
+import { ECallMeFilter, ECallMeSortByField, ICallMesGetQuery } from 'adealer-types'
 
-const initialValues: ICallMeGetMany = {
+const initialValues: ICallMesGetQuery = {
     id: '',
     name: '',
     tel: '',
     from: '',
     to: '',
     filter: ECallMeFilter.All,
-    page: 1,
-    perPage: callsPerPage[0],
+    page: '1',
+    perPage: callsPerPage[0].toString(),
     apply: false,
-    sort: ISort.Asc,
-    sortBy: ECallMeSortField.ID,
+    sortDesc: false,
+    sortBy: ECallMeSortByField.ID,
 }
 
 const CallsSection = () => {
-    const formik = useFormik<ICallMeGetMany>({
+    const formik = useFormik<ICallMesGetQuery>({
         initialValues,
         onSubmit: () => {},
     })
@@ -46,17 +45,6 @@ const CallsSection = () => {
             <Section className="mx-auto flex flex-col gap-y-6 xl:w-5/6">
                 <h3 className="text-center text-h3 font-semibold">Requested Calls</h3>
                 <SearchForm />
-                {/* {isLoading || isUninitialized ? loading() : null} */}
-                {/* {callView} */}
-                {/* {isError ? <ErrorCard reset={refetch} /> : null}
-                <div className="flex justify-center gap-5">
-                    <FormSelector id="perPage" label="Calls" name="perPage" options={callsPerPage} />
-                    <PageSelector
-                        changePage={page => setFieldValue('page', page)}
-                        page={deferredValues.page}
-                        pages={pages}
-                    />
-                </div> */}
             </Section>
         </FormikProvider>
     )

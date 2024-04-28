@@ -1,6 +1,6 @@
 import { client } from '../client'
 import { EApiEntity } from '../models/Generic'
-import { IModel } from '../models/Model'
+import { IModel } from 'adealer-types'
 
 const entity = EApiEntity.MODEL
 

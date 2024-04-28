@@ -1,5 +1,5 @@
 import { authClient, internalClient } from '../client'
-import { IEmployeeData, IEmployeeLogin, IEmployeeTokens } from '../models/Employee'
+import { IEmployeeData, IEmployeeLogin, IEmployeeTokens } from 'adealer-types'
 import { EApiEntity } from '../models/Generic'
 
 const entity = EApiEntity.EMPLOYEE
