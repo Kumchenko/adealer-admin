@@ -2,31 +2,34 @@
 import loading from '@/app/loading'
 import Card from '@/components/Card/Card'
 import Section from '@/components/Section/Section'
-import { useGetCallQuery } from '@/services/calls'
 import ErrorCard from '@/components/ErrorCard/ErrorCard'
 import CallForm from '../CallForm/CallForm'
 import { CallSectionProps } from './interfaces'
+import { useCallMe } from '@/api/queries/CallMe/queries'
 
 const CallSection = ({ id }: CallSectionProps) => {
-    const { call, isSuccess, isLoading, isUninitialized, isError, refetch } = useGetCallQuery(id, {
-        selectFromResult: ({ data, ...other }) => ({
-            call: data,
-            ...other,
-        }),
-    })
+  const { data, isError } = useCallMe(id)
 
-    return (
-        <Section>
-            <h3 className="mb-6 text-center text-h3 font-semibold">{`Call #${id}`}</h3>
-            {isLoading || isUninitialized ? loading() : null}
-            {isSuccess && call ? (
-                <Card className="mx-auto grid w-80 grid-cols-3 gap-3">
-                    <CallForm call={call} />
-                </Card>
-            ) : null}
-            {isError ? <ErrorCard reset={refetch} /> : null}
-        </Section>
-    )
+  const getContent = () => {
+    if (data) {
+      return (
+        <Card className="mx-auto grid w-80 grid-cols-3 gap-3">
+          <CallForm call={data} />
+        </Card>
+      )
+    }
+    if (isError) {
+      return <ErrorCard />
+    }
+    return loading()
+  }
+
+  return (
+    <Section>
+      <h3 className="mb-6 text-center text-h3 font-semibold">{`Call #${id}`}</h3>
+      {getContent()}
+    </Section>
+  )
 }
 
 export default CallSection

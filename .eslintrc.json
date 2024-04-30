@@ -3,5 +3,6 @@
         "next/core-web-vitals",
         "plugin:@typescript-eslint/recommended",
         "prettier"
-    ]
+    ],
+    "rules": { "react/no-unescaped-entities": 0 }
 }

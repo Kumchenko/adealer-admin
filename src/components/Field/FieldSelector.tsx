@@ -1,7 +1,7 @@
 import { memo } from 'react'
-import { FormSelectorProps } from './interfaces'
+import { FieldSelectorProps } from './interfaces'
 
-const FormSelector = ({ id, label, value, onBlur, onChange, options }: FormSelectorProps) => {
+const FieldSelector = ({ id, label, value, onBlur, onChange, options }: FieldSelectorProps) => {
   return (
     <div className="flex items-baseline rounded-3xl border border-violet-300 bg-violet-50 py-1 pl-3 pr-1">
       <label htmlFor={id} className="mr-2 text-lg">
@@ -33,4 +33,4 @@ const FormSelector = ({ id, label, value, onBlur, onChange, options }: FormSelec
   )
 }
 
-export default memo(FormSelector)
+export default memo(FieldSelector)

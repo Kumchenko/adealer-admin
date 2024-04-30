@@ -9,20 +9,20 @@ export const logoutTimeout = 2700 // 4s
 export const modalTimeout = 2500 // 3.5s
 
 export enum DesignColor {
-    Violet = 'violet',
-    Red = 'red',
-    Green = 'green',
-    Transparent = 'transparent',
+  Violet = 'violet',
+  Red = 'red',
+  Green = 'green',
+  Transparent = 'transparent',
 }
 
 export enum Sort {
-    Asc = 'asc',
-    Desc = 'desc',
+  Asc = 'asc',
+  Desc = 'desc',
 }
 
 export enum ModalType {
-    Info = 'info',
-    Error = 'error',
+  Info = 'info',
+  Error = 'error',
 }
 
-export const sortOptions = toOptions(Sort)
+export const SortOptions = toOptions(Sort)
