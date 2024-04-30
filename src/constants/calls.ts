@@ -1,21 +1,14 @@
+import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter'
 import { toOptions } from '@/utils/toOptions'
+import { ECallMeFilter, ECallMeSortByField } from 'adealer-types'
 
-export enum CallField {
-    ID = 'id',
-    Name = 'name',
-    Tel = 'tel',
-    Created = 'created',
-    Checked = 'checked',
-}
+export const CallsPerPageOptions = [5, 10, 15, 20, 25] as const
 
-export enum CallFilter {
-    All = 'all',
-    Created = 'created',
-    Checked = 'checked',
-}
+export const CallFilters = toOptions(ECallMeFilter)
 
-export const CallTableHeaders = ['id', 'name', 'tel', 'created', 'checked'] // Headers for Calls Table
+export const CallSortFieldKeys = Object.values(ECallMeSortByField)
 
-export const callsPerPage = [5, 10, 15, 20, 25]
-
-export const callFilters = toOptions(CallFilter)
+export const CallSortFields = CallSortFieldKeys.map(value => ({
+  title: capitalizeFirstLetter(value),
+  value,
+}))

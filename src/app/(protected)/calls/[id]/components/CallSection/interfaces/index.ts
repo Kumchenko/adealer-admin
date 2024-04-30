@@ -1,1 +1,1 @@
-export type CallSectionProps = { id: number }
+export type CallSectionProps = { id: string }
