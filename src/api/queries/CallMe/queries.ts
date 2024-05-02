@@ -9,6 +9,8 @@ export const CallMeKeys = {
   list: (filters: ICallMesGetQuery) => [{ ...CallMeKeys.lists()[0], filters }] as const,
   details: () => [{ ...CallMeKeys.all[0], entity: 'detail' }] as const,
   detail: (id: string) => [{ ...CallMeKeys.details()[0], id }] as const,
+  statistics: () => [{ ...CallMeKeys.all[0], entity: 'statistics' }] as const,
+  statistic: (filters: any) => [{ ...CallMeKeys.statistics()[0], filters }] as const,
 }
 
 export const useCallMes = (filters: ICallMesGetQuery = {}) =>
@@ -16,6 +18,12 @@ export const useCallMes = (filters: ICallMesGetQuery = {}) =>
     queryKey: CallMeKeys.list(filters),
     queryFn: ({ queryKey }) => Api.CallMe.getMany(queryKey[0].filters),
     placeholderData: keepPreviousData,
+  })
+
+export const useCallMesStatistics = (filters: any = {}) =>
+  useQuery({
+    queryKey: CallMeKeys.statistic(filters),
+    queryFn: () => Api.CallMe.getStats(),
   })
 
 export const useCallMe = (id: string = '') => {

@@ -1,13 +1,12 @@
 import { clearEmptyParams } from '@/utils/clearEmptyParams'
-import { logoutRedirect } from '@/utils/logoutRedirect'
 import { Mutex } from 'async-mutex'
 import axios, { AxiosError } from 'axios'
-import { IEmployeeTokens } from 'adealer-types'
+import { IEmployeeAccess } from 'adealer-types'
 import { Api } from './Api'
 
 const getInternalClient = () => {
   const client = axios.create({
-    baseURL: `/api`,
+    baseURL: `http://localhost:3000/api`,
     timeout: 1000 * 60,
     withCredentials: true,
   })
@@ -46,7 +45,7 @@ const getAuthClient = () => {
     // Retrieve and add Auth token to interceptor
     const {
       data: { accessToken },
-    } = await internalClient<IEmployeeTokens>('/auth/get-tokens')
+    } = await internalClient<IEmployeeAccess>('/auth/get-tokens')
 
     req.headers['Authorization'] = `Bearer ${accessToken}`
 
@@ -77,8 +76,7 @@ const getAuthClient = () => {
 
           // Try to refresh tokens
           try {
-            await Api.Employee.refresh()
-            const { accessToken: newAccessToken } = await Api.Employee.getTokens()
+            const { accessToken: newAccessToken } = await Api.Employee.refresh()
             if (newAccessToken) {
               // Set new access token to config and instance
               config.headers['Authorization'] = `Bearer ${newAccessToken}`
