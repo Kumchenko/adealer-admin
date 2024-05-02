@@ -3,8 +3,9 @@ import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, accessTokenMaxAge, refreshTokenMax
 import axios from 'axios'
 
 import { cookies } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const cookieStore = cookies()
   const refreshToken = cookieStore.get(REFRESH_TOKEN_KEY)?.value
 
@@ -18,5 +19,5 @@ export async function POST(req: Request) {
   cookieStore.set(ACCESS_TOKEN_KEY, tokens.accessToken, { httpOnly: true, maxAge: accessTokenMaxAge })
   cookieStore.set(REFRESH_TOKEN_KEY, tokens.refreshToken, { httpOnly: true, maxAge: refreshTokenMaxAge })
 
-  return new Response()
+  return NextResponse.json({ accessToken: tokens.accessToken })
 }
