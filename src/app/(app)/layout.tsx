@@ -5,7 +5,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   return (
     <div className="overflow-x-hidden lg:flex">
       <Sidebar />
-      <main className="w-full">{children}</main>
+      <main className="grow overflow-x-hidden">{children}</main>
     </div>
   )
 }
