@@ -63,7 +63,7 @@ const LoginForm = () => {
           <FieldInput
             label="Password"
             id="password"
-            type="text"
+            type="password"
             placeholder="Password"
             error={error?.message}
             {...props}
