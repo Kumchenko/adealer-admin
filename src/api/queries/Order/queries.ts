@@ -1,7 +1,7 @@
 import { Api } from '@/api/Api'
-import { IOrdersGetQuery } from 'adealer-types'
+import { IOrderRead, IOrdersGetQuery, IPaginated } from 'adealer-types'
 import { EApiEntity } from '@/api/models/Generic'
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const OrderKeys = {
   all: [{ scope: EApiEntity.ORDER }] as const,
@@ -17,6 +17,7 @@ export const useOrders = (filters: IOrdersGetQuery = {}) =>
   useQuery({
     queryKey: OrderKeys.list(filters),
     queryFn: ({ queryKey }) => Api.Order.getMany(queryKey[0].filters),
+    placeholderData: keepPreviousData,
   })
 
 export const useOrdersStatistics = (filters: any = {}) =>
@@ -24,3 +25,20 @@ export const useOrdersStatistics = (filters: any = {}) =>
     queryKey: OrderKeys.statistic(filters),
     queryFn: () => Api.Order.getStats(),
   })
+
+export const useOrder = (id: string = '') => {
+  const queryClient = useQueryClient()
+  return useQuery({
+    queryKey: OrderKeys.detail(id),
+    queryFn: () => Api.Order.getById(id),
+    enabled: !!id,
+    initialData: () => {
+      const cache = queryClient.getQueriesData<IPaginated<IOrderRead>>({ queryKey: OrderKeys.lists() })
+      const cachedEntries = cache
+        .map(cacheEntry => cacheEntry[1]?.data.find(callMe => `${callMe.id}` == id))
+        .filter(Boolean)
+      return cachedEntries[0]
+    },
+    initialDataUpdatedAt: () => queryClient.getQueryState(OrderKeys.lists())?.dataUpdatedAt,
+  })
+}

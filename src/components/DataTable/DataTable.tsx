@@ -8,17 +8,25 @@ import { cn } from '@/lib/utils'
 interface DataTableProps<TData> {
   table: TableType<TData>
   onRowClick?: (id: string) => void
+  className?: string
 }
 
-export function DataTable<TData>({ table, onRowClick }: DataTableProps<TData>) {
+export function DataTable<TData>({ table, className, onRowClick }: DataTableProps<TData>) {
   return (
-    <Table>
+    <Table className={className}>
       <TableHeader>
         {table.getHeaderGroups().map(headerGroup => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map(header => {
               return (
-                <TableHead key={header.id}>
+                <TableHead
+                  key={header.id}
+                  style={{
+                    width: `${header.getSize()}px`,
+                    minWidth: `${header.column.columnDef.minSize}px`,
+                    maxWidth: `${header.column.columnDef.maxSize}px`,
+                  }}
+                >
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               )
@@ -36,7 +44,16 @@ export function DataTable<TData>({ table, onRowClick }: DataTableProps<TData>) {
               onClick={() => onRowClick?.(row.id)}
             >
               {row.getVisibleCells().map(cell => (
-                <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                <TableCell
+                  key={cell.id}
+                  style={{
+                    width: `${cell.column.getSize()}px`,
+                    minWidth: `${cell.column.columnDef.minSize}px`,
+                    maxWidth: `${cell.column.columnDef.maxSize}px`,
+                  }}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
               ))}
             </TableRow>
           ))

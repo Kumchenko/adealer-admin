@@ -1,22 +1,19 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { useAppDispatch } from '@/stores'
-import api from '@/services'
-import { axiosLogout } from '@/utils/axios'
 import Api from '@/api'
+import { useQueryClient } from '@tanstack/react-query'
 
 const LogoutLogic = () => {
-  const dispatch = useAppDispatch()
+  const queryClient = useQueryClient()
+
   const router = useRouter()
+
   useEffect(() => {
-    Api.Employee.logout()
-      .then(() => {
-        dispatch(api.util.resetApiState())
-      })
-      .then(() => {
-        router.push('/login')
-      })
+    Api.Employee.logout().then(() => {
+      queryClient.clear()
+      router.push('/login')
+    })
   }, [])
 
   return <div className="hidden"></div>

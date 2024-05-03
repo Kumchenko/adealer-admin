@@ -7,13 +7,14 @@ import { cn } from '@/lib/utils'
 export type ColumnHeaderProps<TData, TValue> = {
   column: Column<TData, TValue>
   title: string
+  className?: string
 }
 
-export const ColumnHeader = <TData, TValue>({ title, column }: ColumnHeaderProps<TData, TValue>) => {
+export const ColumnHeader = <TData, TValue>({ title, column, className }: ColumnHeaderProps<TData, TValue>) => {
   const handleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
   return (
-    <div className={'flex items-center space-x-1'}>
+    <div className={cn('flex items-center space-x-1', className)}>
       <span>{title}</span>
       {column.getCanSort() && (
         <Button variant="icon" size="icon" onClick={handleSorting}>

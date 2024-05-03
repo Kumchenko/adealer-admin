@@ -6,10 +6,12 @@ import FieldRadio from '@/components/Field/FieldRadio'
 import { CallFilters, DesignColor } from '@/constants'
 import { cn } from '@/lib/utils'
 import { useCallFiltersStore } from '@/stores/CallFilltersStore'
+import { useDateFiltersStore } from '@/stores/DateFiltersStore'
 import { memo } from 'react'
 
 const SearchForm = ({ className }: { className?: string }) => {
-  const { apply, from, to, id, name, tel, filter, resetValues, setValue } = useCallFiltersStore()
+  const { from, to, resetValues: resetDates, setValue: setDate } = useDateFiltersStore()
+  const { apply, id, name, tel, filter, resetValues, setValue } = useCallFiltersStore()
   return (
     <Card className={cn('grid grid-cols-12 items-center justify-items-center gap-x-4 gap-y-2 shadow-md', className)}>
       <FieldInput
@@ -55,7 +57,7 @@ const SearchForm = ({ className }: { className?: string }) => {
         value={from}
         label="From"
         type="datetime-local"
-        onChange={e => setValue('from', e.target.value)}
+        onChange={e => setDate('from', e.target.value)}
       />
       <FieldInput
         className="col-span-12 row-span-2 w-full sm:col-span-6 md:col-span-3"
@@ -63,7 +65,7 @@ const SearchForm = ({ className }: { className?: string }) => {
         value={to}
         label="To"
         type="datetime-local"
-        onChange={e => setValue('to', e.target.value)}
+        onChange={e => setDate('to', e.target.value)}
       />
       <FieldCheckbox
         className="order-2 col-span-12 sm:col-span-6 md:col-span-3"
@@ -72,7 +74,14 @@ const SearchForm = ({ className }: { className?: string }) => {
         onChange={e => setValue('apply', e.target.checked)}
         label="Date for Filter"
       />
-      <Button className="order-2 col-span-12 sm:col-span-6 md:col-span-3" color={DesignColor.Red} onClick={resetValues}>
+      <Button
+        className="order-2 col-span-12 sm:col-span-6 md:col-span-3"
+        color={DesignColor.Red}
+        onClick={() => {
+          resetValues()
+          resetDates()
+        }}
+      >
         Clear
       </Button>
     </Card>

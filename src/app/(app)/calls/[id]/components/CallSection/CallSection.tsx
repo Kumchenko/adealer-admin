@@ -13,7 +13,7 @@ const CallSection = ({ id }: CallSectionProps) => {
   const getContent = () => {
     if (data) {
       return (
-        <Card className="mx-auto grid w-80 grid-cols-3 gap-3">
+        <Card className="mx-auto w-80">
           <CallForm call={data} />
         </Card>
       )

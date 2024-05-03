@@ -4,7 +4,7 @@ import { PageSelectorProps } from './interfaces'
 
 const PageSelector = ({ page, pages = 0, setPage }: PageSelectorProps) => {
   return (
-    <div className="flex items-center justify-center gap-1 rounded-3xl border border-violet-300 bg-violet-50 px-2 py-1">
+    <div className="flex items-center justify-center gap-1 rounded-3xl border border-violet-400 bg-violet-50 px-2 py-1">
       {pages >= 1 ? (
         <>
           <button

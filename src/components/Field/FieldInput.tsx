@@ -24,7 +24,7 @@ const FieldInput = ({
       {label ? <label htmlFor={id}>{label}</label> : null}
       <span
         className={cn(
-          'text-red break-words',
+          'break-words text-red-600',
           label ? 'justify-self-end text-right' : 'order-1 col-span-2 text-center',
           error ? 'block' : 'hidden',
         )}
@@ -34,7 +34,11 @@ const FieldInput = ({
       <input
         className={cn(
           'col-span-2 h-[2.125rem] w-full rounded-2xl border bg-white px-3 py-1 placeholder:text-violet-400',
-          error ? 'border-red text-red-600 placeholder:text-red-400' : 'border-current',
+          disabled
+            ? 'border-violet-400 text-violet-400'
+            : error
+              ? 'border-red-600 text-red-600 placeholder:text-red-400'
+              : 'border-current',
         )}
         value={type === 'datetime-local' ? getDateTimeInputValue(value) : value}
         name={name}

@@ -5,6 +5,6 @@ import { EApiEntity } from '../models/Generic'
 const entity = EApiEntity.COMPONENT
 
 export class ComponentService {
-    getMany = async ({ modelId }: IComponentsGetQuery) =>
-        (await client<IComponent[]>(`/auth/${entity}` + modelId ? `/${modelId}` : '')).data
+  getMany = async ({ modelId }: IComponentsGetQuery) =>
+    (await client<IComponent[]>(`/${entity}`, { params: { modelId } })).data
 }
