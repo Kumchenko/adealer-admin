@@ -1,34 +1,35 @@
 'use client'
 import loading from '@/app/loading'
 import Section from '@/components/Section/Section'
-import { useGetOrderQuery } from '@/services/order'
-import { idToString } from '@/utils/idToString'
 import ErrorCard from '@/components/ErrorCard/ErrorCard'
 import OrderForm from '../OrderForm/OrderForm'
+import { useOrder } from '@/api/queries/Order/queries'
+import { idToString } from '@/utils/idToString'
 
-const OrderSection = ({ id }: { id: number }) => {
-    const { order, isSuccess, isLoading, isUninitialized, isError, refetch } = useGetOrderQuery(id, {
-        selectFromResult: ({ data, ...other }) => ({
-            order: data,
-            ...other,
-        }),
-    })
+const OrderSection = ({ id }: { id: string }) => {
+  const { data, isError } = useOrder(id)
 
-    return (
-        <Section>
-            <h3 className="text-center text-h3 font-semibold">{`Order #${idToString(id)}`}</h3>
-            {isLoading || isUninitialized ? loading() : null}
-            {isSuccess && order ? (
-                <>
-                    <p className="mb-6 mt-2 text-center text-xl sm:text-xl">
-                        {new Date(order.created).toLocaleString()}
-                    </p>
-                    <OrderForm order={order} />
-                </>
-            ) : null}
-            {isError ? <ErrorCard reset={refetch} /> : null}
-        </Section>
-    )
+  const getContent = () => {
+    if (data) {
+      return (
+        <>
+          <p className="mb-6 mt-2 text-center text-xl sm:text-xl">{new Date(data.created).toLocaleString()}</p>
+          <OrderForm order={data} />
+        </>
+      )
+    }
+    if (isError) {
+      return <ErrorCard />
+    }
+    return loading()
+  }
+
+  return (
+    <Section>
+      <h3 className="text-center text-h3 font-semibold">{`Order #${idToString(parseInt(id))}`}</h3>
+      {getContent()}
+    </Section>
+  )
 }
 
 export default OrderSection

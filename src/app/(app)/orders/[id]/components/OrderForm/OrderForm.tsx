@@ -1,24 +1,45 @@
-import Button from '@/components/Button/Button'
+import { useComponents } from '@/api/queries/Component/queries'
+import { useModels } from '@/api/queries/Model/queries'
+import { useDeleteOrder, useUpdateOrder } from '@/api/queries/Order/mutations'
+import { useServices } from '@/api/queries/Service/queries'
+import OldButton from '@/components/Button/Button'
 import Card from '@/components/Card/Card'
-import { FormInput, FormSelect } from '@/components/Form'
-import { DesignColor, orderStatusOptions } from '@/constants'
-import { OrderData, PatchOrderArgs } from '@/interfaces'
-import { useGetComponentsQuery } from '@/services/component'
-import { showModal } from '@/services/modal'
-import { useGetModelsQuery } from '@/services/model'
-import { useDeleteOrderMutation, useUpdateOrderMutation } from '@/services/order'
-import { useGetServicesQuery } from '@/services/service'
-import { useAppDispatch } from '@/stores'
-import { idToString } from '@/utils/idToString'
+import FieldInput from '@/components/Field/FieldInput'
+import FieldSelect from '@/components/Field/FieldSelect'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { DesignColor, OrderStatusOptions } from '@/constants'
 import { modelIdConverter } from '@/utils/stringConverter'
 import { useOptions } from '@/utils/useOptions'
-import { useUpdate } from '@/utils/useUpdate'
-import { FormikProvider, useFormik } from 'formik'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { EStatus, IOrderRead } from 'adealer-types'
 import { useRouter } from 'next/navigation'
-import { memo, useMemo } from 'react'
-import * as Yup from 'yup'
+import { memo, useMemo, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-const OrderForm = ({ order: orderObj }: { order: OrderData }) => {
+const schema = z.object({
+  name: z.string().min(3).max(32),
+  surname: z.string().min(3).max(32),
+  tel: z.string().regex(/^[+]{1}38[0]{1}[0-9]{9}$/, 'Incorrect format'),
+  email: z.string().regex(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/, 'Incorrect format'),
+  modelId: z.string(),
+  componentId: z.string(),
+  qualityId: z.string(),
+  cost: z.number().min(0, "Can't be less 0"),
+  operation: z.nativeEnum(EStatus).nullable(),
+})
+
+type Values = z.infer<typeof schema>
+
+const OrderForm = ({ order: orderObj }: { order: IOrderRead }) => {
   const {
     service: { modelId, componentId, qualityId },
     serviceId,
@@ -26,59 +47,44 @@ const OrderForm = ({ order: orderObj }: { order: OrderData }) => {
     ...order
   } = orderObj
 
-  const dispatch = useAppDispatch()
-
   const router = useRouter()
 
-  const initialValues: Omit<PatchOrderArgs, 'status'> = {
-    ...order,
-    modelId,
-    componentId,
-    qualityId,
-  }
+  const [openDelete, setOpenDelete] = useState(false)
 
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(3, ({ min }) => `Min ${min} letters`)
-      .max(32, ({ max }) => `Max ${max} letters`)
-      .required('Required'),
-    surname: Yup.string()
-      .min(3, ({ min }) => `Min ${min} letters`)
-      .max(32, ({ max }) => `Max ${max} letters`)
-      .required('Required'),
-    tel: Yup.string()
-      .matches(/^[+]{1}38[0]{1}[0-9]{9}$/, 'Incorrect format')
-      .required('Required'),
-    email: Yup.string()
-      .matches(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/, 'Incorrect format')
-      .required('Required'),
-    modelId: Yup.string().required('Required'),
-    componentId: Yup.string().required('Required'),
-    qualityId: Yup.string().required('Required'),
-    cost: Yup.number().min(0, "Can't be less 0"),
+  const { mutate: updateOrder, isPending: isUpdating } = useUpdateOrder(order.id.toString())
+  const { mutate: deleteOrder, isPending: isDeleting } = useDeleteOrder(order.id.toString())
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    reset,
+    setValue,
+    formState: { isDirty, isSubmitting },
+  } = useForm<Values>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: order.name,
+      surname: order.surname,
+      tel: order.tel,
+      email: order.email,
+      modelId: modelId ?? '',
+      componentId: componentId ?? '',
+      qualityId: qualityId ?? '',
+      cost: order.cost,
+    },
   })
 
-  const formik = useFormik<Omit<PatchOrderArgs, 'status'>>({
-    initialValues,
-    validationSchema,
-    enableReinitialize: true,
-    onSubmit: () => {},
-  })
-
-  const { values } = formik
+  const chosenModelId = watch('modelId')
+  const chosenComponentId = watch('componentId')
 
   // Retrieving needed data
-  const { data: models } = useGetModelsQuery()
-  const { data: components } = useGetComponentsQuery(values.modelId)
-  const { data: services } = useGetServicesQuery(
-    {
-      modelId: values.modelId,
-      componentId: values.componentId,
-    },
-    {
-      skip: !values.modelId || !values.componentId,
-    },
-  )
+  const { data: models } = useModels()
+  const { data: components } = useComponents({ modelId: chosenModelId })
+  const { data: services } = useServices({
+    modelId: chosenModelId,
+    componentId: chosenComponentId,
+  })
 
   // Preparing arrays of objects for select options
   const modelOptions = useOptions(models, modelIdConverter)
@@ -86,58 +92,169 @@ const OrderForm = ({ order: orderObj }: { order: OrderData }) => {
   const qualities = useMemo(() => services?.map(service => service.qualityId), [services])
   const qualityOptions = useOptions(qualities)
 
-  const [updateOrder, { isLoading: isUpdating }] = useUpdateOrderMutation()
-  const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation()
+  const currentOperations = order.operations?.map(op => op.status)
 
-  // Catching changes of model
-  useUpdate(() => {
-    formik.setFieldValue('componentId', '')
-  }, [values.modelId])
+  const handleClose = () => router.push('/orders')
 
-  // Catching changes of component
-  useUpdate(() => {
-    formik.setFieldValue('qualityId', '')
-  }, [values.componentId])
+  const handleUpdate = (values: Values) => {
+    const { name, surname, tel, email, cost, modelId, componentId, qualityId, operation } = values
+    updateOrder(
+      {
+        name,
+        surname,
+        tel,
+        email,
+        cost: cost.toString(),
+        modelId,
+        componentId,
+        qualityId,
+        status: operation ?? undefined,
+      },
+      { onSuccess: data => reset(data) },
+    )
+  }
 
-  // Catching changes of quality
-  useUpdate(() => {
-    formik.setFieldValue('cost', services?.find(service => service.qualityId === values.qualityId)?.cost || 0)
-  }, [values.qualityId])
+  const handleDelete = () => {
+    deleteOrder(undefined, { onSuccess: handleClose })
+  }
+
+  const handleUpdatePrice = (qualityId: string) => {
+    setValue('cost', services?.find(service => service.qualityId === qualityId)?.cost || 0)
+  }
 
   return (
-    <FormikProvider value={formik}>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+    <>
+      <form className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4" onSubmit={handleSubmit(handleUpdate)}>
         <Card className="flex flex-col items-start gap-3">
           <h5 className="text-h5 font-semibold">Base info</h5>
-          <FormInput placeholder="John" id="name" label="Name" name="name" type="text" />
-          <FormInput placeholder="Doe" id="surname" label="Surname" name="surname" type="text" />
-          <FormInput placeholder="+38" id="tel" label="Tel" name="tel" type="text" />
-          <FormInput placeholder="example@example.com" id="email" label="Email" name="email" type="email" />
+          <Controller
+            name="name"
+            control={control}
+            render={({ field: { ref, ...props }, fieldState: { error } }) => (
+              <FieldInput placeholder="John" id="name" label="Name" type="text" error={error?.message} {...props} />
+            )}
+          />
+          <Controller
+            name="surname"
+            control={control}
+            render={({ field: { ref, ...props }, fieldState: { error } }) => (
+              <FieldInput
+                placeholder="Doe"
+                id="surname"
+                label="Surname"
+                type="text"
+                error={error?.message}
+                {...props}
+              />
+            )}
+          />
+          <Controller
+            name="tel"
+            control={control}
+            render={({ field: { ref, ...props }, fieldState: { error } }) => (
+              <FieldInput
+                placeholder="+38"
+                id="tel"
+                label="Phone number"
+                type="text"
+                error={error?.message}
+                {...props}
+              />
+            )}
+          />
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { ref, ...props }, fieldState: { error } }) => (
+              <FieldInput
+                placeholder="example@example.com"
+                id="email"
+                label="Email"
+                type="email"
+                error={error?.message}
+                {...props}
+              />
+            )}
+          />
         </Card>
 
         <Card className="flex flex-col items-start gap-3">
           <h5 className="text-h5 font-semibold">Service info</h5>
-          <FormSelect name="modelId" id="model" label="Model" placeholder="Choose model" options={modelOptions} />
-          <FormSelect
+          <Controller
+            name="modelId"
+            control={control}
+            render={({ field: { ref, onChange, ...props }, fieldState: { error } }) => (
+              <FieldSelect
+                id="model"
+                label="Model"
+                placeholder="Choose model"
+                options={modelOptions}
+                onChange={e => {
+                  onChange(e)
+                  setValue('componentId', '')
+                  setValue('qualityId', '')
+                }}
+                error={error?.message}
+                {...props}
+              />
+            )}
+          />
+          <Controller
             name="componentId"
-            id="component"
-            label="Component"
-            placeholder="Choose component"
-            options={componentOptions}
+            control={control}
+            render={({ field: { ref, onChange, ...props }, fieldState: { error } }) => (
+              <FieldSelect
+                id="component"
+                label="Component"
+                placeholder="Choose component"
+                options={componentOptions}
+                onChange={e => {
+                  onChange(e)
+                  setValue('qualityId', '')
+                }}
+                error={error?.message}
+                {...props}
+              />
+            )}
           />
-          <FormSelect
+          <Controller
             name="qualityId"
-            id="quality"
-            label="Quality"
-            placeholder="Choose quality"
-            options={qualityOptions}
+            control={control}
+            render={({ field: { ref, onChange, ...props }, fieldState: { error } }) => (
+              <FieldSelect
+                id="quality"
+                label="Quality"
+                placeholder="Choose quality"
+                options={qualityOptions}
+                onChange={e => {
+                  onChange(e)
+                  handleUpdatePrice(e.target.value)
+                }}
+                error={error?.message}
+                {...props}
+              />
+            )}
           />
-          <FormInput name="cost" id="cost" label="Cost (UAH)" type="text" />
+          <Controller
+            name="cost"
+            control={control}
+            render={({ field: { ref, value, ...props }, fieldState: { error } }) => (
+              <FieldInput
+                id="cost"
+                label="Cost"
+                placeholder="Cost (UAH)"
+                type="text"
+                value={value.toString()}
+                error={error?.message}
+                {...props}
+              />
+            )}
+          />
         </Card>
 
-        <Card className="flex flex-col gap-3">
+        <Card className="flex flex-col gap-3 overflow-y-auto">
           <h5 className="text-h5 font-semibold">Status</h5>
-          {order.operations.length > 0 ? (
+          {!!order.operations.length ? (
             order.operations.map(op => (
               <div key={op.id}>
                 <p>
@@ -149,69 +266,74 @@ const OrderForm = ({ order: orderObj }: { order: OrderData }) => {
           ) : (
             <span>No operations – Just created</span>
           )}
-          <div className="grid grid-cols-[repeat(auto-fit,_minmax(0,_1fr))] items-start gap-2">
-            {orderStatusOptions.map(status => (
-              <Button
-                key={status.value}
-                onClick={() =>
-                  updateOrder({ id: order.id, status: status.value })
-                    .unwrap()
-                    .then(() => {
-                      dispatch(
-                        showModal({
-                          title: 'Success',
-                          description: `Successfully set status '${status.title}' for Order #${idToString(order.id)}`,
-                        }),
-                      )
-                    })
-                }
-                color={DesignColor.Violet}
-                isLoading={isUpdating}
-                disabled={!!order.operations.find(operation => operation.status == status.value)}
-              >
-                {status.title}
-              </Button>
-            ))}
+        </Card>
+
+        <Card className="flex flex-col gap-3">
+          <div>
+            <h5 className="mb-2 text-h5 font-semibold">Add new status</h5>
+            <Controller
+              name="operation"
+              control={control}
+              render={({ field: { ref, value, ...props }, fieldState: { error } }) => (
+                <FieldSelect
+                  id="status"
+                  label="New status"
+                  value={(value as string) ?? ''}
+                  placeholder="Don't add status"
+                  placeholderDisabled={false}
+                  options={OrderStatusOptions.filter(option => !currentOperations.includes(option.value))}
+                  error={error?.message}
+                  {...props}
+                />
+              )}
+            />
           </div>
-          <h5 className="mt-auto text-h5 font-semibold">Actions</h5>
-          <div className="mb-0 grid grid-cols-3 items-start gap-2">
-            <Button onClick={() => router.push('/orders')} color={DesignColor.Violet}>
-              Close
-            </Button>
-            <Button
-              onClick={() =>
-                deleteOrder(order.id)
-                  .unwrap()
-                  .then(() => router.push('/orders'))
-              }
-              color={DesignColor.Red}
-              isLoading={isDeleting}
-            >
-              Delete
-            </Button>
-            <Button
-              onClick={() =>
-                updateOrder(values)
-                  .unwrap()
-                  .then(() => {
-                    dispatch(
-                      showModal({
-                        title: 'Success',
-                        description: `Order #${idToString(order.id)} successfully updated`,
-                      }),
-                    )
-                  })
-              }
-              disabled={values === formik.initialValues}
-              isLoading={isUpdating}
-              color={DesignColor.Green}
-            >
-              Save
-            </Button>
+          <div className="mb-0 mt-auto">
+            <h5 className="mb-2 text-h5 font-semibold">Actions</h5>
+            <div className="mb-0 grid grid-cols-3 items-start gap-2">
+              <OldButton type="button" onClick={handleClose} color={DesignColor.Violet}>
+                Close
+              </OldButton>
+              <OldButton
+                type="button"
+                onClick={() => setOpenDelete(true)}
+                color={DesignColor.Red}
+                isLoading={isDeleting}
+              >
+                Delete
+              </OldButton>
+              <OldButton
+                type="submit"
+                disabled={!isDirty || isSubmitting}
+                isLoading={isUpdating}
+                color={DesignColor.Green}
+              >
+                Save
+              </OldButton>
+            </div>
           </div>
         </Card>
-      </div>
-    </FormikProvider>
+      </form>
+
+      <Dialog open={openDelete} onOpenChange={setOpenDelete}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Order?</DialogTitle>
+            <DialogDescription>
+              Are you sure that you want to delete this Order? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenDelete(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 

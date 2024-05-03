@@ -1,14 +1,25 @@
+import { CallActionCell } from '@/app/(app)/calls/components/CallActionCell'
 import { ColumnHeader } from '@/components/DataTable/ColumnHeader'
-import { CallSortFieldKeys } from '@/constants'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { ColumnDef } from '@tanstack/react-table'
-import { ECallMeSortByField, ICallMe } from 'adealer-types'
+import { ICallMe } from 'adealer-types'
 import { format } from 'date-fns'
+import { EllipsisVertical } from 'lucide-react'
 
 export const useCallColumns = (): ColumnDef<ICallMe>[] => {
   return [
     {
       accessorKey: 'id',
-      size: 200,
+      size: 80,
       header: ({ column }) => <ColumnHeader column={column} title="ID" />,
       cell: ({
         row: {
@@ -18,7 +29,7 @@ export const useCallColumns = (): ColumnDef<ICallMe>[] => {
     },
     {
       accessorKey: 'name',
-      size: 200,
+      size: 130,
       header: ({ column }) => <ColumnHeader column={column} title="Name" />,
       cell: ({
         row: {
@@ -28,7 +39,7 @@ export const useCallColumns = (): ColumnDef<ICallMe>[] => {
     },
     {
       accessorKey: 'tel',
-      size: 200,
+      size: 150,
       header: ({ column }) => <ColumnHeader column={column} title="Phone" />,
       cell: ({
         row: {
@@ -38,7 +49,7 @@ export const useCallColumns = (): ColumnDef<ICallMe>[] => {
     },
     {
       accessorKey: 'created',
-      size: 300,
+      minSize: 200,
       header: ({ column }) => <ColumnHeader column={column} title="Created" />,
       cell: ({
         row: {
@@ -50,7 +61,7 @@ export const useCallColumns = (): ColumnDef<ICallMe>[] => {
     },
     {
       accessorKey: 'checked',
-      size: 300,
+      minSize: 200,
       header: ({ column }) => <ColumnHeader column={column} title="Checked" />,
       cell: ({
         row: {
@@ -60,24 +71,12 @@ export const useCallColumns = (): ColumnDef<ICallMe>[] => {
         return checked ? format(checked, 'do MMMM y  H:mm') : '–'
       },
     },
-    //   {
-    //     accessorKey: 'deletion',
-    //     size: 75,
-    //     header: ({ column }) => <ColumnHeader column={column} title="Дія" />,
-    //     cell: ({
-    //       row: {
-    //         original: { id },
-    //       },
-    //     }) => (
-    //       <Button
-    //         variant="ghost"
-    //         className="mx-auto"
-    //         onClick={() => deleteWish(id)}
-    //       >
-    //         <Trash className="w-5 h-5 text-red-600" />
-    //       </Button>
-    //     ),
-    //     enableSorting: false,
-    //   },
+    {
+      accessorKey: 'action',
+      maxSize: 75,
+      header: ({ column }) => <ColumnHeader column={column} title="Action" className="justify-center" />,
+      cell: ({ row: { original } }) => <CallActionCell call={original} />,
+      enableSorting: false,
+    },
   ]
 }

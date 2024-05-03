@@ -1,124 +1,160 @@
+import { useComponents } from '@/api/queries/Component/queries'
+import { useModels } from '@/api/queries/Model/queries'
+import { useQualities } from '@/api/queries/Quality/queries'
 import Button from '@/components/Button/Button'
 import Card from '@/components/Card/Card'
-import { FormInput, FormCheckbox, FormSelect } from '@/components/Form'
-import { DesignColor, orderFilterOptions } from '@/constants'
-import { useGetComponentsQuery } from '@/services/component'
-import { useGetModelsQuery } from '@/services/model'
-import { useGetQualitiesQuery } from '@/services/quality'
+import FieldCheckbox from '@/components/Field/FieldCheckbox'
+import FieldInput from '@/components/Field/FieldInput'
+import FieldSelect from '@/components/Field/FieldSelect'
+import { DesignColor, OrderFilters } from '@/constants'
+import { cn } from '@/lib/utils'
+import { useDateFiltersStore } from '@/stores/DateFiltersStore'
+import { useOrderFiltersStore } from '@/stores/OrderFiltersStore'
 import { modelIdConverter } from '@/utils/stringConverter'
 import { useOptions } from '@/utils/useOptions'
-import { useFormikContext } from 'formik'
+import { EOrderFilter } from 'adealer-types'
 
 const SearchForm = ({ className }: { className?: string }) => {
-    // Getting models, components, qualities
-    const { data: models } = useGetModelsQuery()
-    const { data: components } = useGetComponentsQuery()
-    const { data: qualities } = useGetQualitiesQuery()
+  const { from, to, resetValues: resetDates, setValue: setDate } = useDateFiltersStore()
+  const {
+    id,
+    name,
+    surname,
+    tel,
+    email,
+    modelId,
+    componentId,
+    qualityId,
+    apply,
+    filter,
+    onSortingChange,
+    resetValues,
+    setValue,
+  } = useOrderFiltersStore()
 
-    // Preparing objects for options
-    const modelOptions = useOptions(models, modelIdConverter)
-    const componentOptions = useOptions(components)
-    const qualityOptions = useOptions(qualities)
+  // Getting models, components, qualities
+  const { data: models } = useModels()
+  const { data: components } = useComponents()
+  const { data: qualities } = useQualities()
 
-    const { resetForm } = useFormikContext()
+  // Preparing objects for options
+  const modelOptions = useOptions(models, modelIdConverter)
+  const componentOptions = useOptions(components)
+  const qualityOptions = useOptions(qualities)
 
-    return (
-        <Card className={`${className} grid grid-cols-12 items-end justify-items-center gap-x-4 gap-y-2 bg-violet-800 p-4`}>
-            <FormInput
-                className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
-                name="id"
-                type="text"
-                id="id"
-                placeholder="ID"
-            />
-            <FormSelect
-                className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
-                name="modelId"
-                id="model"
-                options={modelOptions}
-                placeholder="All models"
-                placeholderDisabled={false}
-            />
-            <FormSelect
-                className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
-                name="componentId"
-                id="component"
-                options={componentOptions}
-                placeholder="All components"
-                placeholderDisabled={false}
-            />
-            <FormSelect
-                className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
-                name="qualityId"
-                id="quality"
-                options={qualityOptions}
-                placeholder="All qualities"
-                placeholderDisabled={false}
-            />
-            <FormInput
-                className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
-                name="name"
-                type="text"
-                id="name"
-                placeholder="Name"
-            />
-            <FormInput
-                className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
-                name="surname"
-                type="text"
-                id="surname"
-                placeholder="Surname"
-            />
-            <FormInput
-                className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
-                name="tel"
-                type="text"
-                id="tel"
-                placeholder="Tel"
-            />
-            <FormInput
-                className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
-                name="email"
-                type="email"
-                id="email"
-                placeholder="Email"
-            />
-            <FormSelect
-                className="col-span-12 row-span-2 max-md:order-1 sm:col-span-6 md:col-span-3"
-                label="Filter"
-                name="filter"
-                id="filter"
-                options={orderFilterOptions}
-            />
-            <FormInput
-                className="col-span-12 row-span-2 w-full sm:col-span-6 md:col-span-3"
-                name="from"
-                id="from"
-                label="From"
-                type="datetime-local"
-            />
-            <FormInput
-                className="col-span-12 row-span-2 w-full sm:col-span-6 md:col-span-3"
-                name="to"
-                id="to"
-                label="To"
-                type="datetime-local"
-            />
-            <FormCheckbox
-                className="col-span-12 max-md:order-1 sm:col-span-6 md:col-span-3"
-                name="apply"
-                id="apply"
-                label="Date for Filter"
-            />
-            <Button
-                className="order-2 col-span-12 sm:col-span-6 md:col-span-3"
-                color={DesignColor.Red}
-                onClick={() => resetForm()}
-            >
-                Clear
-            </Button>
-        </Card>
-    )
+  return (
+    <Card className={cn('grid grid-cols-12 items-end justify-items-center gap-x-4 gap-y-2 p-4', className)}>
+      <FieldInput
+        className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
+        name="id"
+        value={id}
+        type="text"
+        id="id"
+        placeholder="ID"
+        onChange={e => setValue('id', e.target.value)}
+      />
+      <FieldSelect
+        className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
+        id="model"
+        value={modelId}
+        options={modelOptions}
+        placeholder="All models"
+        placeholderDisabled={false}
+        onChange={e => setValue('modelId', e.target.value)}
+      />
+      <FieldSelect
+        className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
+        id="component"
+        value={componentId}
+        options={componentOptions}
+        placeholder="All components"
+        placeholderDisabled={false}
+        onChange={e => setValue('componentId', e.target.value)}
+      />
+      <FieldSelect
+        className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
+        id="quality"
+        value={qualityId}
+        options={qualityOptions}
+        placeholder="All qualities"
+        placeholderDisabled={false}
+        onChange={e => setValue('qualityId', e.target.value)}
+      />
+      <FieldInput
+        className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
+        value={name}
+        type="text"
+        id="name"
+        placeholder="Name"
+        onChange={e => setValue('name', e.target.value)}
+      />
+      <FieldInput
+        className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
+        value={surname}
+        type="text"
+        id="surname"
+        placeholder="Surname"
+        onChange={e => setValue('surname', e.target.value)}
+      />
+      <FieldInput
+        className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
+        value={tel}
+        type="text"
+        id="tel"
+        placeholder="Tel"
+        onChange={e => setValue('tel', e.target.value)}
+      />
+      <FieldInput
+        className="col-span-12 w-full sm:col-span-6 lg:col-span-3"
+        value={email}
+        type="email"
+        id="email"
+        placeholder="Email"
+        onChange={e => setValue('email', e.target.value)}
+      />
+      <FieldSelect
+        className="col-span-12 row-span-2 max-md:order-1 sm:col-span-6 md:col-span-3"
+        label="Filter"
+        id="filter"
+        value={filter}
+        options={OrderFilters}
+        onChange={e => setValue('filter', e.target.value as EOrderFilter)}
+      />
+      <FieldInput
+        className="col-span-12 row-span-2 w-full sm:col-span-6 md:col-span-3"
+        id="from"
+        value={from}
+        label="From"
+        type="datetime-local"
+        onChange={e => setDate('from', e.target.value)}
+      />
+      <FieldInput
+        className="col-span-12 row-span-2 w-full sm:col-span-6 md:col-span-3"
+        id="to"
+        value={to}
+        label="To"
+        type="datetime-local"
+        onChange={e => setDate('to', e.target.value)}
+      />
+      <FieldCheckbox
+        className="col-span-12 max-md:order-1 sm:col-span-6 md:col-span-3"
+        id="apply"
+        label="Date for Filter"
+        checked={apply}
+        onChange={e => setValue('apply', e.target.checked)}
+      />
+      <Button
+        className="order-2 col-span-12 sm:col-span-6 md:col-span-3"
+        color={DesignColor.Red}
+        onClick={() => {
+          resetValues()
+          resetDates()
+        }}
+      >
+        Clear
+      </Button>
+    </Card>
+  )
 }
 
 export default SearchForm

@@ -3,6 +3,9 @@ import { Mutex } from 'async-mutex'
 import axios, { AxiosError } from 'axios'
 import { IEmployeeAccess } from 'adealer-types'
 import { Api } from './Api'
+import { toast } from 'sonner'
+import { logoutRedirect } from '@/utils/logoutRedirect'
+import { debounce } from 'lodash'
 
 const getInternalClient = () => {
   const client = axios.create({
@@ -19,6 +22,12 @@ const getClient = () => {
     timeout: 1000 * 60,
     withCredentials: true,
   })
+
+  client.interceptors.request.use(async req => {
+    req.params = clearEmptyParams(req.params)
+    return req
+  })
+
   return client
 }
 
@@ -31,10 +40,13 @@ const getAuthClient = () => {
 
   const mutex = new Mutex()
 
-  const handleLogout = async () => {
-    // enqueueSnackbar('Login session expired', { variant: 'warning' });
+  const handleLogout = debounce(async () => {
+    logoutRedirect()
+    toast.warning('Warning', {
+      description: 'Session is expired. Logging out...',
+    })
     client.defaults.headers.common['Authorization'] = undefined
-  }
+  }, 5000)
 
   client.interceptors.request.use(async req => {
     req.params = clearEmptyParams(req.params)

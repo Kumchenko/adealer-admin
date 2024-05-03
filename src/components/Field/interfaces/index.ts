@@ -66,3 +66,23 @@ export type FieldSelectorProps = {
   onChange?: ChangeEventHandler<HTMLSelectElement>
   onBlur?: FocusEventHandler<HTMLSelectElement>
 }
+
+export type FieldSelectProps = {
+  label?: string
+  id: string
+
+  className?: string
+  required?: boolean
+  disabled?: boolean
+
+  placeholder?: string
+  placeholderDisabled?: boolean
+
+  value?: string | number
+  options?: readonly Option[] | readonly number[] | readonly string[]
+
+  error?: string
+
+  onChange?: ChangeEventHandler<HTMLSelectElement>
+  onBlur?: FocusEventHandler<HTMLSelectElement>
+}

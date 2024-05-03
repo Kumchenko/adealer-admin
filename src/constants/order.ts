@@ -1,31 +1,21 @@
+import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter'
 import { toOptions } from '@/utils/toOptions'
+import { EOrderFilter, EOrderSortByField, EStatus } from 'adealer-types'
 
-export enum OrderFilter {
-    All = 'ALL',
-    Created = 'CREATED',
-    Processing = 'INPROCESS',
-    Done = 'DONE',
-}
+export const OrdersPerPageOptions = [6, 12, 18, 24, 30]
 
-export enum OrderStatus {
-    Process = 'INPROCESS',
-    Done = 'DONE',
-}
+export const OrderStatuses = Object.values(EStatus)
 
-export enum OrderSortBy {
-    ID = 'id',
-    Name = 'name',
-    Surname = 'surname',
-    Tel = 'tel',
-    Email = 'email',
-    Cost = 'cost',
-    Created = 'created',
-}
+export const OrderStatusOptions = OrderStatuses.map(value => ({
+  title: capitalizeFirstLetter(value.toLocaleLowerCase()),
+  value,
+}))
 
-export const ordersPerPage = [6, 12, 18, 24, 30]
+export const OrderFilters = toOptions(EOrderFilter)
 
-export const orderFilterOptions = toOptions(OrderFilter)
+export const OrderSortFieldKeys = Object.values(EOrderSortByField)
 
-export const orderSortByOptions = toOptions(OrderSortBy)
-
-export const orderStatusOptions = toOptions(OrderStatus)
+export const OrderSortFields = OrderSortFieldKeys.map(value => ({
+  title: capitalizeFirstLetter(value.toLocaleLowerCase()),
+  value,
+}))

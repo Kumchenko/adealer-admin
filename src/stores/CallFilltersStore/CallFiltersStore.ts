@@ -8,8 +8,6 @@ type CallFiltersStoreState = {
   id: string
   name: string
   tel: string
-  from: string
-  to: string
   filter: ECallMeFilter
   page: number
   perPage: number
@@ -26,14 +24,12 @@ type CallFiltersActions = {
 
 type CallFiltersStore = CallFiltersStoreState & CallFiltersActions
 
-export const CallFilterStoreName = 'call-filters-store'
+export const CallFiltersStoreName = 'call-filters-store'
 
 const defaultValues = {
   id: '',
   name: '',
   tel: '',
-  from: '',
-  to: '',
   filter: ECallMeFilter.All,
   page: 1,
   perPage: CallsPerPageOptions[0],
@@ -56,7 +52,7 @@ export const useCallFiltersStore = create(
       resetValues: () => set(defaultValues),
     })),
     {
-      name: CallFilterStoreName,
+      name: CallFiltersStoreName,
       storage: createJSONStorage(() => sessionStorage),
     },
   ),

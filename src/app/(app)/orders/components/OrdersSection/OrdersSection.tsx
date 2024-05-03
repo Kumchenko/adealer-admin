@@ -3,99 +3,125 @@ import loading from '@/app/loading'
 import ErrorCard from '@/components/ErrorCard/ErrorCard'
 import PageSelector from '@/components/PageSelector/PageSelector'
 import Section from '@/components/Section/Section'
-import {
-  OrderFilter,
-  OrderSortBy,
-  Sort,
-  orderSortByOptions,
-  ordersPerPage,
-  pollingInterval,
-  SortOptions,
-} from '@/constants'
-import { FormikProvider, useFormik } from 'formik'
-import { useDeferredValue, useEffect, useMemo } from 'react'
-import { useGetOrdersQuery } from '@/services/order'
-import { GetOrdersArgs } from '@/interfaces'
+import { Sort, SortOptions, OrdersPerPageOptions, OrderSortFields } from '@/constants'
 import { FormSelector } from '@/components/Form'
 import SearchForm from '../SearchForm/SearchForm'
-import OrderList from '../OrderView/OrderList'
+import { useRouter } from 'next/navigation'
+import { useDateFiltersStore } from '@/stores/DateFiltersStore'
+import { useOrderFiltersStore } from '@/stores/OrderFiltersStore'
+import { useOrders } from '@/api/queries/Order/queries'
+import { EOrderSortByField } from 'adealer-types'
+import { DataTable } from '@/components/DataTable'
+import { useOrdersColumns } from '@/hooks/useOrdersColumns'
+import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
 const OrderSection = () => {
-  const initialValues: GetOrdersArgs = {
-    id: '',
-    name: '',
-    surname: '',
-    email: '',
-    tel: '',
-    filter: OrderFilter.All,
-    page: 1,
-    perPage: ordersPerPage[0],
-    apply: false,
-    modelId: '',
-    componentId: '',
-    qualityId: '',
-    from: '',
-    to: '',
-    sort: Sort.Asc,
-    sortBy: OrderSortBy.ID,
-  }
+  const router = useRouter()
 
-  const formik = useFormik<GetOrdersArgs>({
-    initialValues,
-    onSubmit: () => {},
+  const { from, to } = useDateFiltersStore()
+  const {
+    id,
+    name,
+    surname,
+    tel,
+    email,
+    modelId,
+    componentId,
+    qualityId,
+    apply,
+    page,
+    perPage,
+    sortBy,
+    sortDesc,
+    filter,
+    onSortingChange,
+    setValue,
+  } = useOrderFiltersStore()
+
+  const columns = useOrdersColumns()
+
+  const { data, isError } = useOrders({
+    page: page.toString(),
+    perPage: perPage.toString(),
+    id,
+    name,
+    surname,
+    tel,
+    email,
+    modelId,
+    componentId,
+    qualityId,
+    apply,
+    filter,
+    from,
+    to,
+    sortBy,
+    sortDesc,
   })
 
-  // Destructuring some formik data
-  const { values, setFieldValue } = formik
-
-  // Decreasing count of rerenders
-  const deferredValues = useDeferredValue(values)
-
-  const { orders, pages, isLoading, isFetching, isError, isSuccess, isUninitialized, refetch } = useGetOrdersQuery(
-    deferredValues,
-    {
-      selectFromResult: ({ data, ...args }) => ({
-        orders: data?.data,
-        pages: data?.pagination.pages,
-        ...args,
-      }),
-      pollingInterval,
+  const table = useReactTable({
+    data: data?.data ?? [],
+    columns,
+    getRowId: row => row.id.toString(),
+    getCoreRowModel: getCoreRowModel(),
+    state: {
+      sorting: [
+        {
+          id: sortBy,
+          desc: sortDesc,
+        },
+      ],
     },
-  )
+    enableMultiSort: false,
+    manualSorting: true,
+    manualPagination: true,
+    onSortingChange,
+  })
 
-  // Set First page when pages count changed
-  useEffect(() => {
-    setFieldValue('page', 1)
-  }, [pages])
+  const handleRowClick = (id: string) => router.push(`/orders/${id}`)
 
-  const orderView = useMemo(() => {
-    if (isSuccess) {
-      if (orders && orders.length > 0) {
-        return <OrderList className={`${isFetching && 'opacity-85 blur-xs saturate-50'}`} orders={orders} />
-      } else {
-        return <span className="text-center text-2xl font-semibold">No orders</span>
-      }
+  const getContent = () => {
+    if (data) {
+      return <DataTable table={table} onRowClick={handleRowClick} />
     }
-  }, [isSuccess, isFetching, orders])
+    if (isError) {
+      return <ErrorCard />
+    }
+    return loading()
+  }
 
   return (
-    <FormikProvider value={formik}>
-      <Section className="mx-auto flex flex-col gap-y-6 xl:w-5/6">
-        <h3 className="text-center text-h3 font-semibold">Orders</h3>
-        <SearchForm />
-        <div className="flex flex-col items-center justify-center gap-5 sm:flex-row">
-          <FormSelector id="sortBy" label="Sort by" name="sortBy" options={orderSortByOptions} />
-          <FormSelector id="sort" label="Order" name="sort" options={SortOptions} />
-        </div>
-        {isLoading || isUninitialized ? loading() : null}
-        {orderView}
-        {isError ? <ErrorCard reset={refetch} /> : null}
-        <div className="flex justify-center gap-5">
-          <FormSelector id="perPage" label="Orders" name="perPage" options={ordersPerPage} />
-          <PageSelector changePage={page => setFieldValue('page', page)} page={deferredValues.page} pages={pages} />
-        </div>
-      </Section>
-    </FormikProvider>
+    <Section className="mx-auto flex flex-col gap-y-6 xl:w-5/6">
+      <h3 className="text-center text-h3 font-semibold">Orders</h3>
+      <SearchForm />
+      <div className="flex flex-col items-center justify-center gap-5 sm:flex-row">
+        <FormSelector
+          id="sortBy"
+          label="Sort by"
+          options={OrderSortFields}
+          value={sortBy}
+          onChange={e => setValue('sortBy', e.target.value as EOrderSortByField)}
+        />
+        <FormSelector
+          id="sort"
+          label="Order"
+          options={SortOptions}
+          value={sortDesc ? Sort.Desc : Sort.Asc}
+          onChange={e => setValue('sortDesc', e.target.value === Sort.Desc)}
+        />
+      </div>
+      {getContent()}
+      <div className="flex justify-center gap-5">
+        <FormSelector
+          id="perPage"
+          label="Orders"
+          value={perPage}
+          onChange={e => setValue('perPage', parseInt(e.target.value))}
+          options={OrdersPerPageOptions}
+        />
+        <PageSelector setPage={page => setValue('page', page)} page={page} pages={data?.pagination.pages} />
+      </div>
+    </Section>
   )
 }
 

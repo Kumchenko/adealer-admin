@@ -13,17 +13,20 @@ import { useCallFiltersStore } from '@/stores/CallFilltersStore'
 import { ECallMeSortByField } from 'adealer-types'
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { usePathname, useRouter } from 'next/navigation'
+import { useDateFiltersStore } from '@/stores/DateFiltersStore'
+import { cn } from '@/lib/utils'
 
 const CallsSection = () => {
   const pathname = usePathname()
   const router = useRouter()
 
-  const { page, perPage, id, name, tel, from, to, apply, filter, sortBy, sortDesc, setValue, onSortingChange } =
+  const { from, to } = useDateFiltersStore()
+  const { page, perPage, id, name, tel, apply, filter, sortBy, sortDesc, setValue, onSortingChange } =
     useCallFiltersStore()
 
   const columns = useCallColumns()
 
-  const { data, isError } = useCallMes({
+  const { data, isError, dataUpdatedAt, isPlaceholderData } = useCallMes({
     page: page.toString(),
     perPage: perPage.toString(),
     id,
@@ -56,11 +59,9 @@ const CallsSection = () => {
     onSortingChange,
   })
 
-  const handleRowClick = (id: string) => router.push(`${pathname}/${id}`)
-
   const getContent = () => {
     if (data) {
-      return <DataTable table={table} onRowClick={handleRowClick} />
+      return <DataTable className={cn({ ['opacity-70']: isPlaceholderData })} table={table} key={dataUpdatedAt} />
     }
     if (isError) {
       return <ErrorCard />
