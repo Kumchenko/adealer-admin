@@ -1,49 +1,80 @@
 'use client'
 import Api from '@/api'
-import Button from '@/components/Button/Button'
-import { Form, FormInput } from '@/components/Form'
-import { DesignColor, ModalType } from '@/constants'
-import { showModal } from '@/services/modal'
-import { useFormik } from 'formik'
+import FieldInput from '@/components/Field/FieldInput'
+import { Button } from '@/components/ui/button'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import * as Yup from 'yup'
+import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
-const validationSchema = Yup.object({
-  login: Yup.string()
-    .min(3, ({ min }) => `Min ${min} letters`)
-    .max(20, ({ max }) => `Max ${max} letters`)
-    .required('Required'),
-  password: Yup.string()
-    .min(5, ({ min }) => `Min ${min} letters`)
-    .max(64, ({ max }) => `Max ${max} letters`)
-    .required('Required'),
+const schema = z.object({
+  login: z.string().min(3).max(20),
+  password: z.string().min(5).max(64),
 })
+
+type Values = z.infer<typeof schema>
 
 const LoginForm = () => {
   const router = useRouter()
-  const initialValues = {
-    login: '',
-    password: '',
-  }
 
-  const formik = useFormik({
-    initialValues,
-    validationSchema,
-    onSubmit: async values => {
-      await Api.Employee.login(values)
-      router.push('/dashboard')
-      showModal({ title: 'Wrong credentials', type: ModalType.Error, milliSeconds: 10000 })
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Values>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      login: '',
+      password: '',
     },
   })
 
+  const handleLogin = async ({ login, password }: Values) => {
+    try {
+      await Api.Employee.login({ login, password })
+      router.push('/dashboard')
+    } catch {
+      toast.error('Wrong credentials')
+    }
+  }
+
   return (
-    <Form formik={formik} className="flex flex-col gap-4">
-      <FormInput label="Username" id="login" name="login" type="text" placeholder="Username" />
-      <FormInput label="Password" id="password" name="password" type="password" placeholder="Password" />
-      <Button className="mx-auto" color={DesignColor.Green} onClick={() => formik.submitForm()}>
+    <form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-4">
+      <Controller
+        control={control}
+        name="login"
+        render={({ field: { ref, ...props }, fieldState: { error } }) => (
+          <FieldInput
+            label="Username"
+            id="login"
+            type="text"
+            placeholder="Username"
+            error={error?.message}
+            {...props}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { ref, ...props }, fieldState: { error } }) => (
+          <FieldInput
+            label="Password"
+            id="password"
+            type="text"
+            placeholder="Password"
+            error={error?.message}
+            {...props}
+          />
+        )}
+      />
+
+      <Button className="mx-auto" variant="success" type="submit" disabled={isSubmitting}>
         Log In
       </Button>
-    </Form>
+    </form>
   )
 }
 

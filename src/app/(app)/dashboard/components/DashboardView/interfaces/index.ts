@@ -1,9 +1,9 @@
-import { OrderStats, CallStats } from '@/interfaces'
+import { ICallMeStatistics, IOrderStatistics } from 'adealer-types'
 import { PropsWithChildren } from 'react'
 
 export type DashboardGridProps = {
-    orderStats: OrderStats
-    callStats: CallStats
+  orderStats: IOrderStatistics
+  callStats: ICallMeStatistics
 }
 
 export type DashboardCardProps = PropsWithChildren<{ title: string }>

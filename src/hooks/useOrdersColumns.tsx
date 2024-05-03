@@ -1,9 +1,11 @@
 import { ColumnHeader } from '@/components/DataTable/ColumnHeader'
 import { priceFormatter } from '@/utils/priceFormatter'
 import { ColumnDef } from '@tanstack/react-table'
-import { IOrderRead } from 'adealer-types'
+import { EStatus, IOperation, IOrderRead } from 'adealer-types'
 import { format } from 'date-fns'
 import { baseIdConverter, modelIdConverter } from '../utils/stringConverter'
+import { Badge } from '@/components/ui/badge'
+import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter'
 
 export const useOrdersColumns = (): ColumnDef<IOrderRead>[] => {
   return [
@@ -39,37 +41,55 @@ export const useOrdersColumns = (): ColumnDef<IOrderRead>[] => {
       }) => tel,
     },
     {
-      accessorKey: 'modelId',
-      minSize: 140,
-      header: ({ column }) => <ColumnHeader column={column} title="Model" />,
+      accessorKey: 'service',
+      minSize: 165,
+      header: ({ column }) => <ColumnHeader column={column} title="Model" className="justify-center" />,
       cell: ({
         row: {
-          original: { service },
+          original: {
+            service: { modelId, componentId, qualityId },
+          },
         },
-      }) => <span className="font-medium text-violet-900">{modelIdConverter(service.modelId)}</span>,
+      }) => (
+        <div>
+          <div className="text-center font-medium text-violet-900">{modelIdConverter(modelId)}</div>
+          <div className="text-center">{`${baseIdConverter(componentId)} - ${baseIdConverter(qualityId)}`}</div>
+        </div>
+      ),
       enableSorting: false,
     },
     {
-      accessorKey: 'componentId',
-      minSize: 120,
-      header: ({ column }) => <ColumnHeader column={column} title="Component" />,
+      accessorKey: 'operations',
+      maxSize: 120,
+      header: ({ column }) => <ColumnHeader column={column} title="Operations" />,
       cell: ({
         row: {
-          original: { service },
+          original: { operations },
         },
-      }) => baseIdConverter(service.componentId),
-      enableSorting: false,
-    },
-    {
-      accessorKey: 'qualityId',
-      minSize: 120,
-      header: ({ column }) => <ColumnHeader column={column} title="Quality" />,
-      cell: ({
-        row: {
-          original: { service },
-        },
-      }) => baseIdConverter(service.qualityId),
-      enableSorting: false,
+      }) => {
+        const getBadgeVariant = (operation: IOperation) => {
+          switch (operation.status) {
+            case EStatus.DONE:
+            case EStatus.RETURNED:
+              return 'success'
+            case EStatus.ISSUED:
+              return 'destructive'
+            default:
+              return 'info'
+          }
+        }
+        return (
+          <div className="flex flex-wrap gap-1">
+            {!!operations.length
+              ? operations.map(op => (
+                  <Badge key={op.id} variant={getBadgeVariant(op)}>
+                    {capitalizeFirstLetter(op.status.toLowerCase())}
+                  </Badge>
+                ))
+              : '–'}
+          </div>
+        )
+      },
     },
     {
       accessorKey: 'cost',

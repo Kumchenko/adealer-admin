@@ -2,7 +2,6 @@ import { useComponents } from '@/api/queries/Component/queries'
 import { useModels } from '@/api/queries/Model/queries'
 import { useDeleteOrder, useUpdateOrder } from '@/api/queries/Order/mutations'
 import { useServices } from '@/api/queries/Service/queries'
-import OldButton from '@/components/Button/Button'
 import Card from '@/components/Card/Card'
 import FieldInput from '@/components/Field/FieldInput'
 import FieldSelect from '@/components/Field/FieldSelect'
@@ -15,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { DesignColor, OrderStatusOptions } from '@/constants'
+import { OrderStatusOptions } from '@/constants'
 import { modelIdConverter } from '@/utils/stringConverter'
 import { useOptions } from '@/utils/useOptions'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -291,25 +290,15 @@ const OrderForm = ({ order: orderObj }: { order: IOrderRead }) => {
           <div className="mb-0 mt-auto">
             <h5 className="mb-2 text-h5 font-semibold">Actions</h5>
             <div className="mb-0 grid grid-cols-3 items-start gap-2">
-              <OldButton type="button" onClick={handleClose} color={DesignColor.Violet}>
+              <Button variant="outline" type="button" onClick={handleClose}>
                 Close
-              </OldButton>
-              <OldButton
-                type="button"
-                onClick={() => setOpenDelete(true)}
-                color={DesignColor.Red}
-                isLoading={isDeleting}
-              >
+              </Button>
+              <Button variant="destructive" type="button" onClick={() => setOpenDelete(true)} isLoading={isDeleting}>
                 Delete
-              </OldButton>
-              <OldButton
-                type="submit"
-                disabled={!isDirty || isSubmitting}
-                isLoading={isUpdating}
-                color={DesignColor.Green}
-              >
+              </Button>
+              <Button variant="success" type="submit" disabled={!isDirty || isSubmitting} isLoading={isUpdating}>
                 Save
-              </OldButton>
+              </Button>
             </div>
           </div>
         </Card>

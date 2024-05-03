@@ -5,5 +5,5 @@ import { IModel } from 'adealer-types'
 const entity = EApiEntity.MODEL
 
 export class ModelService {
-    getMany = async () => (await client<IModel[]>(`/${entity}`)).data
+  getMany = async () => (await client<IModel[]>(`/${entity}`)).data
 }

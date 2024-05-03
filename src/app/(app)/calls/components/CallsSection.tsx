@@ -5,7 +5,6 @@ import { CallSortFields, CallsPerPageOptions, Sort, SortOptions } from '@/consta
 import Section from '@/components/Section/Section'
 import SearchForm from './SearchForm'
 import ErrorCard from '@/components/ErrorCard/ErrorCard'
-import FormSelector from '@/components/Form/FormSelector'
 import { useCallMes } from '@/api/queries/CallMe/queries'
 import { useCallColumns } from '@/hooks/useCallColumns'
 import { DataTable } from '@/components/DataTable'
@@ -15,6 +14,7 @@ import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { usePathname, useRouter } from 'next/navigation'
 import { useDateFiltersStore } from '@/stores/DateFiltersStore'
 import { cn } from '@/lib/utils'
+import FieldSelector from '@/components/Field/FieldSelector'
 
 const CallsSection = () => {
   const pathname = usePathname()
@@ -74,14 +74,14 @@ const CallsSection = () => {
       <h3 className="text-center text-h3 font-semibold">Requested Calls</h3>
       <SearchForm />
       <div className="flex flex-col items-center justify-center gap-5 sm:flex-row">
-        <FormSelector
+        <FieldSelector
           id="sortBy"
           label="Sort by"
           options={CallSortFields}
           value={sortBy}
           onChange={e => setValue('sortBy', e.target.value as ECallMeSortByField)}
         />
-        <FormSelector
+        <FieldSelector
           id="sort"
           label="Order"
           options={SortOptions}
@@ -91,7 +91,7 @@ const CallsSection = () => {
       </div>
       {getContent()}
       <div className="flex justify-center gap-5">
-        <FormSelector
+        <FieldSelector
           id="perPage"
           label="Calls"
           onChange={e => setValue('perPage', parseInt(e.target.value))}

@@ -1,4 +1,4 @@
 export type SectionProps = React.PropsWithChildren<{
-    className?: string
-    full?: boolean
+  className?: string
+  full?: boolean
 }>
