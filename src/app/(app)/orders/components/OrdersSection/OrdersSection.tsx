@@ -4,7 +4,6 @@ import ErrorCard from '@/components/ErrorCard/ErrorCard'
 import PageSelector from '@/components/PageSelector/PageSelector'
 import Section from '@/components/Section/Section'
 import { Sort, SortOptions, OrdersPerPageOptions, OrderSortFields } from '@/constants'
-import { FormSelector } from '@/components/Form'
 import SearchForm from '../SearchForm/SearchForm'
 import { useRouter } from 'next/navigation'
 import { useDateFiltersStore } from '@/stores/DateFiltersStore'
@@ -14,6 +13,7 @@ import { EOrderSortByField } from 'adealer-types'
 import { DataTable } from '@/components/DataTable'
 import { useOrdersColumns } from '@/hooks/useOrdersColumns'
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import FieldSelector from '@/components/Field/FieldSelector'
 
 const OrderSection = () => {
   const router = useRouter()
@@ -95,14 +95,14 @@ const OrderSection = () => {
       <h3 className="text-center text-h3 font-semibold">Orders</h3>
       <SearchForm />
       <div className="flex flex-col items-center justify-center gap-5 sm:flex-row">
-        <FormSelector
+        <FieldSelector
           id="sortBy"
           label="Sort by"
           options={OrderSortFields}
           value={sortBy}
           onChange={e => setValue('sortBy', e.target.value as EOrderSortByField)}
         />
-        <FormSelector
+        <FieldSelector
           id="sort"
           label="Order"
           options={SortOptions}
@@ -112,7 +112,7 @@ const OrderSection = () => {
       </div>
       {getContent()}
       <div className="flex justify-center gap-5">
-        <FormSelector
+        <FieldSelector
           id="perPage"
           label="Orders"
           value={perPage}

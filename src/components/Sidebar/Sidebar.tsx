@@ -12,8 +12,8 @@ const Sidebar = ({ className }: SidebarProps) => {
   const { open, setOpen } = useContext(SidebarContext)
 
   useEffect(() => {
-    setOpen && setOpen(false)
-  }, [pathname])
+    setOpen?.(false)
+  }, [pathname, setOpen])
 
   return (
     <aside

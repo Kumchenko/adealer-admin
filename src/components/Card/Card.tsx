@@ -12,5 +12,6 @@ const Card = forwardRef<HTMLDivElement, CardProps>(({ className, children, onCli
     </div>
   )
 })
+Card.displayName = 'Card'
 
 export default memo(Card)

@@ -1,6 +1,4 @@
 import { useDeleteCallMe, useUpdateCallMe } from '@/api/queries/CallMe/mutations'
-import OldButton from '@/components/Button/Button'
-import { DesignColor } from '@/constants'
 import { ICallMe } from 'adealer-types'
 import { useRouter } from 'next/navigation'
 import { Controller, useForm } from 'react-hook-form'
@@ -69,7 +67,6 @@ const CallForm = ({ call }: { call: ICallMe }) => {
       },
       {
         onSuccess: newCall => {
-          toast('Call has been updated')
           reset(newCall)
         },
       },
@@ -78,10 +75,7 @@ const CallForm = ({ call }: { call: ICallMe }) => {
 
   const handleDelete = () => {
     deleteCall(undefined, {
-      onSuccess: () => {
-        toast('Call has been deleted')
-        handleClose()
-      },
+      onSuccess: handleClose,
     })
   }
 
@@ -91,47 +85,63 @@ const CallForm = ({ call }: { call: ICallMe }) => {
         <Controller
           name="name"
           control={control}
-          render={({ field: { ref, ...props } }) => (
-            <FieldInput className="col-span-3" id="name" label="Name" type="text" {...props} />
+          render={({ field: { ref, ...props }, fieldState: { error } }) => (
+            <FieldInput className="col-span-3" id="name" label="Name" type="text" error={error?.message} {...props} />
           )}
         />
         <Controller
           name="tel"
           control={control}
-          render={({ field: { ref, ...props } }) => (
-            <FieldInput className="col-span-3" id="tel" label="Phone number" type="text" {...props} />
+          render={({ field: { ref, ...props }, fieldState: { error } }) => (
+            <FieldInput
+              className="col-span-3"
+              id="tel"
+              label="Phone number"
+              type="text"
+              error={error?.message}
+              {...props}
+            />
           )}
         />
         <Controller
           name="created"
           control={control}
-          render={({ field: { ref, ...props } }) => (
-            <FieldInput className="col-span-3" id="created" label="Created" type="datetime-local" {...props} disabled />
+          render={({ field: { ref, ...props }, fieldState: { error } }) => (
+            <FieldInput
+              className="col-span-3"
+              id="created"
+              label="Created"
+              type="datetime-local"
+              error={error?.message}
+              {...props}
+              disabled
+            />
           )}
         />
         <Controller
           name="checked"
           control={control}
-          render={({ field: { ref, value, ...props } }) => (
+          render={({ field: { ref, value, ...props }, fieldState: { error } }) => (
             <FieldInput
               className="col-span-3 mb-2"
               id="checked"
               label="Checked"
               type="datetime-local"
               value={value ?? ''}
+              error={error?.message}
               {...props}
             />
           )}
         />
-        <OldButton type="button" onClick={handleClose} color={DesignColor.Violet}>
+        <Button variant="outline" type="button" onClick={handleClose}>
           Close
-        </OldButton>
-        <OldButton type="button" onClick={() => setOpenDelete(true)} color={DesignColor.Red} isLoading={isDeleting}>
+        </Button>
+        <Button variant="destructive" type="button" onClick={() => setOpenDelete(true)} isLoading={isDeleting}>
           Delete
-        </OldButton>
-        <OldButton type="submit" disabled={!isDirty || isSubmitting} color={DesignColor.Green} isLoading={isUpdating}>
+        </Button>
+        <Button variant="success" type="submit" disabled={!isDirty || isSubmitting} isLoading={isUpdating}>
           Save
-        </OldButton>
+        </Button>
       </form>
 
       <Dialog open={openDelete} onOpenChange={setOpenDelete}>

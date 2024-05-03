@@ -1,7 +1,5 @@
 'use client'
 import { PropsWithChildren, useState } from 'react'
-import { Provider } from 'react-redux'
-import store from '@/stores'
 import { asidePoints } from '@/constants'
 import { SidebarProvider } from '@/components/Sidebar/SidebarContext'
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -26,9 +24,7 @@ const Providers = ({ children }: PropsWithChildren) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <SidebarProvider value={{ open, setOpen, endpoints: asidePoints }}>{children}</SidebarProvider>
-      </Provider>
+      <SidebarProvider value={{ open, setOpen, endpoints: asidePoints }}>{children}</SidebarProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )

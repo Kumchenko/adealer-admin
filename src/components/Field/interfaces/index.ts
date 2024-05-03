@@ -1,4 +1,3 @@
-import { FormikContextType } from 'formik'
 import { ChangeEventHandler, FocusEventHandler, HTMLInputTypeAttribute } from 'react'
 
 export type FieldInputProps = {

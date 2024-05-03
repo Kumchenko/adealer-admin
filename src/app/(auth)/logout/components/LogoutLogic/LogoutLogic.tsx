@@ -14,7 +14,7 @@ const LogoutLogic = () => {
       queryClient.clear()
       router.push('/login')
     })
-  }, [])
+  }, [queryClient, router])
 
   return <div className="hidden"></div>
 }

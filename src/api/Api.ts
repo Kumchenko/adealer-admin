@@ -7,11 +7,11 @@ import { QualityService } from './services/Quality'
 import { ServiceService } from './services/Service'
 
 export const Api = {
-    CallMe: new CallMeService(),
-    Component: new ComponentService(),
-    Employee: new EmployeeService(),
-    Model: new ModelService(),
-    Order: new OrderService(),
-    Quality: new QualityService(),
-    Service: new ServiceService(),
+  CallMe: new CallMeService(),
+  Component: new ComponentService(),
+  Employee: new EmployeeService(),
+  Model: new ModelService(),
+  Order: new OrderService(),
+  Quality: new QualityService(),
+  Service: new ServiceService(),
 }

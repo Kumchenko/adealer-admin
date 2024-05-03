@@ -1,7 +1,7 @@
 export declare global {
-    namespace NodeJS {
-        interface ProcessEnv {
-            NEXT_PUBLIC_API: string
-        }
+  namespace NodeJS {
+    interface ProcessEnv {
+      NEXT_PUBLIC_API: string
     }
+  }
 }

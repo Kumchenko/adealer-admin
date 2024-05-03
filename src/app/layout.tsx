@@ -4,7 +4,6 @@ import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
 import { Metadata } from 'next/types'
 import { Providers } from '@/providers'
-import Modal from '@/components/Modal/Modal'
 import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -33,7 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className={cn('border-violet-400', { ['border-b border-t']: !!children })}>{children}</div>
           <Toaster richColors theme="light" />
           <Footer />
-          <Modal />
         </Providers>
       </body>
     </html>
