@@ -3,6 +3,7 @@ import Api from '@/api'
 import FieldInput from '@/components/Field/FieldInput'
 import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { isAxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -34,8 +35,8 @@ const LoginForm = () => {
     try {
       await Api.Employee.login({ login, password })
       router.push('/dashboard')
-    } catch {
-      toast.error('Wrong credentials')
+    } catch (e) {
+      toast.error(isAxiosError(e) ? e.response?.data.message ?? 'Auth error' : 'Auth error')
     }
   }
 

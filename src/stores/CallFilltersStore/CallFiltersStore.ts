@@ -5,6 +5,7 @@ import { create } from 'zustand'
 import { persist, devtools, createJSONStorage } from 'zustand/middleware'
 
 type CallFiltersStoreState = {
+  opened: boolean
   id: string
   name: string
   tel: string
@@ -27,6 +28,7 @@ type CallFiltersStore = CallFiltersStoreState & CallFiltersActions
 export const CallFiltersStoreName = 'call-filters-store'
 
 const defaultValues = {
+  opened: false,
   id: '',
   name: '',
   tel: '',

@@ -17,6 +17,7 @@ import { EOrderFilter } from 'adealer-types'
 const SearchForm = () => {
   const { from, to, resetValues: resetDates, setValue: setDate } = useDateFiltersStore()
   const {
+    opened,
     id,
     name,
     surname,
@@ -27,7 +28,6 @@ const SearchForm = () => {
     qualityId,
     apply,
     filter,
-    onSortingChange,
     resetValues,
     setValue,
   } = useOrderFiltersStore()
@@ -44,7 +44,12 @@ const SearchForm = () => {
 
   return (
     <Card className="px-4 py-1 shadow-md">
-      <Accordion type="single" collapsible>
+      <Accordion
+        defaultValue={opened ? 'item-1' : undefined}
+        type="single"
+        collapsible
+        onValueChange={value => setValue('opened', !!value)}
+      >
         <AccordionItem value="item-1">
           <AccordionTrigger className="text-xl">Filters</AccordionTrigger>
           <AccordionContent className="grid grid-cols-12 items-end justify-items-center gap-x-4 gap-y-2">

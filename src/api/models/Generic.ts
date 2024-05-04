@@ -1,4 +1,5 @@
 export enum EApiEntity {
+  ACTION = 'actions',
   SERVICE = 'services',
   MODEL = 'models',
   COMPONENT = 'components',

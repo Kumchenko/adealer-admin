@@ -1,3 +1,4 @@
+import { ActionService } from './services/Audit'
 import { CallMeService } from './services/CallMe'
 import { ComponentService } from './services/Component'
 import { EmployeeService } from './services/Employee'
@@ -7,6 +8,7 @@ import { QualityService } from './services/Quality'
 import { ServiceService } from './services/Service'
 
 export const Api = {
+  Action: new ActionService(),
   CallMe: new CallMeService(),
   Component: new ComponentService(),
   Employee: new EmployeeService(),

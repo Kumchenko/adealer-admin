@@ -1,19 +1,8 @@
 import { CallActionCell } from '@/app/(app)/calls/components/CallActionCell'
 import { ColumnHeader } from '@/components/DataTable/ColumnHeader'
-import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { ColumnDef } from '@tanstack/react-table'
 import { ICallMe } from 'adealer-types'
 import { format } from 'date-fns'
-import { EllipsisVertical } from 'lucide-react'
 
 export const useCallColumns = (): ColumnDef<ICallMe>[] => {
   return [

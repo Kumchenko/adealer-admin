@@ -10,9 +10,11 @@ const ErrorCard = ({ reset }: ErrorCardProps) => {
   return (
     <Card className="mx-auto my-6 w-60 p-4 sm:w-80">
       <h5 className="text-center text-h5">Something went wrong!</h5>
-      <Button variant="destructive" className="mx-auto mt-2" onClick={() => (reset ? reset() : router.refresh())}>
-        Retry
-      </Button>
+      <div className="mt-2 flex justify-center">
+        <Button variant="destructive" onClick={() => (reset ? reset() : router.refresh())}>
+          Retry
+        </Button>
+      </div>
     </Card>
   )
 }
