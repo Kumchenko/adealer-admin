@@ -16,3 +16,9 @@ export const useMyEmployee = ({ enabled }: { enabled?: boolean } = {}) =>
     queryFn: Api.Employee.info,
     enabled,
   })
+
+export const useEmployees = () =>
+  useQuery({
+    queryKey: EmployeeKeys.list(),
+    queryFn: Api.Employee.getMany,
+  })

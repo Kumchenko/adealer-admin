@@ -12,6 +12,14 @@ export const asidePoints = [
     title: 'Calls',
   },
   {
+    href: '/employees',
+    title: 'Employees',
+  },
+  {
+    href: '/audit',
+    title: 'Audit',
+  },
+  {
     href: '/logout',
     title: 'Logout',
   },

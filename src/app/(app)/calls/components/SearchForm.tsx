@@ -11,10 +11,15 @@ import { memo } from 'react'
 
 const SearchForm = () => {
   const { from, to, resetValues: resetDates, setValue: setDate } = useDateFiltersStore()
-  const { apply, id, name, tel, filter, resetValues, setValue } = useCallFiltersStore()
+  const { opened, apply, id, name, tel, filter, resetValues, setValue } = useCallFiltersStore()
   return (
     <Card className="px-4 py-1 shadow-md">
-      <Accordion type="single" collapsible>
+      <Accordion
+        defaultValue={opened ? 'item-1' : undefined}
+        type="single"
+        collapsible
+        onValueChange={value => setValue('opened', !!value)}
+      >
         <AccordionItem value="item-1">
           <AccordionTrigger className="text-xl">Filters</AccordionTrigger>
           <AccordionContent className="grid grid-cols-12 items-center justify-items-center gap-x-4 gap-y-2">
