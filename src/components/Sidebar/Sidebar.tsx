@@ -1,15 +1,15 @@
 'use client'
-import { memo, useContext, useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import { SidebarProps } from './interfaces'
 import Breadcrumb from '../Breadcrumb/Breadcrumb'
-import SidebarContext from './SidebarContext'
 import SidebarList from './SidebarList'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useSidebarContext } from './SidebarContext'
 
 const Sidebar = ({ className }: SidebarProps) => {
   const pathname = usePathname()
-  const { open, setOpen } = useContext(SidebarContext)
+  const { open, setOpen } = useSidebarContext()
 
   useEffect(() => {
     setOpen?.(false)

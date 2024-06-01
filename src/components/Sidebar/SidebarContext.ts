@@ -1,7 +1,7 @@
 'use client'
 import { asidePoints } from '@/constants'
 import { Endpoint } from '@/interfaces'
-import { Dispatch, SetStateAction, createContext } from 'react'
+import { Dispatch, SetStateAction, createContext, useContext } from 'react'
 
 type SidebarContextType = {
   open: boolean
@@ -15,4 +15,4 @@ const SidebarContext = createContext<SidebarContextType>({
 })
 
 export const SidebarProvider = SidebarContext.Provider
-export default SidebarContext
+export const useSidebarContext = () => useContext(SidebarContext)

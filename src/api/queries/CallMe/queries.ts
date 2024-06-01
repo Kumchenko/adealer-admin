@@ -1,5 +1,5 @@
 import { Api } from '@/api/Api'
-import { ICallMe, ICallMesGetQuery, IPaginated } from 'adealer-types'
+import { ICallMe, ICallMesGetQuery, ICallMesGetStatsQuery, IPaginated } from 'adealer-types'
 import { EApiEntity } from '@/api/models/Generic'
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -10,7 +10,7 @@ export const CallMeKeys = {
   details: () => [{ ...CallMeKeys.all[0], entity: 'detail' }] as const,
   detail: (id: string) => [{ ...CallMeKeys.details()[0], id }] as const,
   statistics: () => [{ ...CallMeKeys.all[0], entity: 'statistics' }] as const,
-  statistic: (filters: any) => [{ ...CallMeKeys.statistics()[0], filters }] as const,
+  statistic: (filters: ICallMesGetStatsQuery) => [{ ...CallMeKeys.statistics()[0], filters }] as const,
 }
 
 export const useCallMes = (filters: ICallMesGetQuery = {}) =>
@@ -20,10 +20,11 @@ export const useCallMes = (filters: ICallMesGetQuery = {}) =>
     placeholderData: keepPreviousData,
   })
 
-export const useCallMesStatistics = (filters: any = {}) =>
+export const useCallMesStatistics = (filters: ICallMesGetStatsQuery = {}) =>
   useQuery({
     queryKey: CallMeKeys.statistic(filters),
-    queryFn: () => Api.CallMe.getStats(),
+    queryFn: ({ queryKey }) => Api.CallMe.getStats(queryKey[0].filters),
+    placeholderData: keepPreviousData,
   })
 
 export const useCallMe = (id: string = '') => {

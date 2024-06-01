@@ -1,12 +1,21 @@
 import { authClient, client } from '../client'
 import { EApiEntity } from '../models/Generic'
-import { ICallMe, ICallMeCreate, ICallMeStatistics, ICallMeUpdate, ICallMesGetQuery, IPaginated } from 'adealer-types'
+import {
+  ICallMe,
+  ICallMeCreate,
+  ICallMeStatistics,
+  ICallMeUpdate,
+  ICallMesGetQuery,
+  ICallMesGetStatsQuery,
+  IPaginated,
+} from 'adealer-types'
 
 const entity = EApiEntity.CALLME
 
 export class CallMeService {
   getMany = async (params: ICallMesGetQuery) => (await authClient<IPaginated<ICallMe>>(`/${entity}`, { params })).data
-  getStats = async () => (await authClient<ICallMeStatistics>(`/${entity}/stats/`)).data
+  getStats = async (params: ICallMesGetStatsQuery) =>
+    (await authClient<ICallMeStatistics>(`/${entity}/stats/`, { params })).data
   getById = async (id: string) => (await authClient<ICallMe>(`/${entity}/${id}`)).data
   create = async (newCallMe: ICallMeCreate) => (await client.post(`/${entity}`, newCallMe)).data
   update = async (id: string, updatedCall: ICallMeUpdate) =>

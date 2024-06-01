@@ -60,6 +60,7 @@ const getAuthClient = () => {
     } = await internalClient<IEmployeeAccess>('/auth/get-tokens')
 
     req.headers['Authorization'] = `Bearer ${accessToken}`
+    req.headers['Accept-Language'] = 'en'
 
     return req
   })

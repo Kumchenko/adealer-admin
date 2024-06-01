@@ -6,4 +6,4 @@ export type DashboardGridProps = {
   callStats: ICallMeStatistics
 }
 
-export type DashboardCardProps = PropsWithChildren<{ title: string }>
+export type DashboardCardProps = PropsWithChildren<{ title: string; className?: string }>

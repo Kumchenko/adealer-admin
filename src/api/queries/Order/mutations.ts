@@ -4,6 +4,7 @@ import { OrderKeys } from './queries'
 import { IOrderRead, IOrderUpdate, IPaginated } from 'adealer-types'
 import { toast } from 'sonner'
 import { idToString } from '@/utils/idToString'
+import { isAxiosError } from 'axios'
 
 export const useUpdateOrder = (id: string = '') => {
   const queryClient = useQueryClient()
@@ -13,7 +14,7 @@ export const useUpdateOrder = (id: string = '') => {
       queryClient.invalidateQueries({ queryKey: OrderKeys.lists() })
       queryClient.invalidateQueries({ queryKey: OrderKeys.detail(id) })
     },
-    onError: () => {
+    onError: err => {
       toast.error('Error', {
         description: `An error occured during Order #${idToString(parseInt(id))} updating`,
       })
@@ -43,9 +44,11 @@ export const useDeleteOrder = (id: string = '') => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: OrderKeys.lists() })
     },
-    onError: () => {
+    onError: err => {
       toast.error('Error', {
-        description: `An error occured during Order #${idToString(parseInt(id))} deletion`,
+        description:
+          `An error occured during Order #${idToString(parseInt(id))} deletion` +
+          (isAxiosError<Error>(err) ? `: ${err.response?.data.message}` : ''),
       })
     },
     onSuccess: data => {

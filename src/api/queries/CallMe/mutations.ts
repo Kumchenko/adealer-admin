@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CallMeKeys } from './queries'
 import { ICallMe, ICallMeUpdate, IPaginated } from 'adealer-types'
 import { toast } from 'sonner'
+import { isAxiosError } from 'axios'
 
 export const useUpdateCallMe = (id: string = '') => {
   const queryClient = useQueryClient()
@@ -12,9 +13,9 @@ export const useUpdateCallMe = (id: string = '') => {
       queryClient.invalidateQueries({ queryKey: CallMeKeys.lists() })
       queryClient.invalidateQueries({ queryKey: CallMeKeys.detail(id) })
     },
-    onError: () => {
+    onError: err => {
       toast.error('Error', {
-        description: `An error occured during Call №${id} updating`,
+        description: `An error occured during Call №${id} updating: ${err.message}`,
       })
     },
     onSuccess: data => {
@@ -42,9 +43,11 @@ export const useDeleteCallMe = (id: string = '') => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: CallMeKeys.lists() })
     },
-    onError: () => {
+    onError: err => {
       toast.error('Error', {
-        description: `An error occured during Call №${id} deletion`,
+        description:
+          `An error occured during Call №${id} deletion` +
+          (isAxiosError<Error>(err) ? `: ${err.response?.data.message}` : ''),
       })
     },
     onSuccess: data => {

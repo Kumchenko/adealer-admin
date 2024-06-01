@@ -6,12 +6,18 @@ import ErrorCard from '@/components/ErrorCard/ErrorCard'
 import { useRouter } from 'next/navigation'
 import { useOrdersStatistics } from '@/api/queries/Order/queries'
 import { useCallMesStatistics } from '@/api/queries/CallMe/queries'
+import SearchForm from '../SearchForm'
+import { useDateFiltersStore } from '@/stores/DateFiltersStore'
+import { useDashboardFiltersStore } from '@/stores/DashboardFiltersStore'
 
 const DashboardSection = () => {
   const router = useRouter()
 
-  const { data: orderStats, isError: isOrderError } = useOrdersStatistics()
-  const { data: callStats, isError: isCallError } = useCallMesStatistics()
+  const { to } = useDateFiltersStore()
+  const { timeframe } = useDashboardFiltersStore()
+
+  const { data: orderStats, isError: isOrderError } = useOrdersStatistics({ timeframe, to })
+  const { data: callStats, isError: isCallError } = useCallMesStatistics({ timeframe, to })
 
   const isError = isOrderError || isCallError
 
@@ -26,8 +32,9 @@ const DashboardSection = () => {
   }
 
   return (
-    <Section className="mx-auto flex flex-col gap-y-6 xl:w-5/6">
+    <Section className="mx-auto flex flex-col gap-y-6 md:w-3/4">
       <h3 className="text-center text-h3 font-semibold">Dashboard</h3>
+      <SearchForm />
       {getContent()}
     </Section>
   )

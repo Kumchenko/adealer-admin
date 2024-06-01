@@ -1,11 +1,9 @@
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid'
 import BreadcrumbList from './BreadcrumbList'
-import { useContext } from 'react'
-import SidebarContext from '../Sidebar/SidebarContext'
+import { useSidebarContext } from '../Sidebar/SidebarContext'
 
 const Breadcrumb = () => {
-  const { open, setOpen, endpoints } = useContext(SidebarContext)
-
+  const { open, setOpen, endpoints } = useSidebarContext()
   return (
     <div className={`flex items-center justify-between gap-2 lg:hidden`}>
       <BreadcrumbList className={`${open && 'hidden'} shrink-[2] overflow-x-auto lg:hidden`} endpoints={endpoints} />

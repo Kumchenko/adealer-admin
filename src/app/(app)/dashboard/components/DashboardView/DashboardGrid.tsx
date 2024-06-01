@@ -4,10 +4,18 @@ import { PieChart } from 'react-minimal-pie-chart'
 import DashboardCard from './DashboardCard'
 import { DashboardGridProps } from './interfaces'
 import { memo } from 'react'
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { format } from 'date-fns'
 
 const DashboardGrid = ({ orderStats, callStats }: DashboardGridProps) => {
+  const chartData = orderStats.counts.map(({ date, orders }, idx) => ({
+    date: format(date, 'd MMM y'),
+    Orders: orders,
+    Calls: callStats.counts.at(idx)?.calls,
+  }))
+
   return (
-    <div className="mx-auto grid grid-cols-1 items-center gap-3 sm:grid-cols-2 lg:w-3/4">
+    <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2 sm:items-center">
       <DashboardCard title="Total orders">
         <div className="flex items-center justify-center gap-2">
           <p className="text-center text-h3 font-semibold">{orderStats?.all}</p>
@@ -80,6 +88,28 @@ const DashboardGrid = ({ orderStats, callStats }: DashboardGridProps) => {
         <div className="flex items-center justify-center gap-2">
           <p className="text-center text-2xl font-semibold">{baseIdConverter(orderStats?.component)}</p>
           <CpuChipIcon className="h-6 w-6" />
+        </div>
+      </DashboardCard>
+      <DashboardCard title="Orders and Calls count" className="col-span-2">
+        <div className="h-[300px]">
+          <ResponsiveContainer>
+            <AreaChart
+              data={chartData}
+              margin={{
+                top: 20,
+                right: 40,
+                left: 0,
+                bottom: 0,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Area type="monotone" dataKey="Orders" stroke="#8884d8" fill="#8884d8" />
+              <Area type="monotone" dataKey="Calls" stroke="#ffc658" fill="transparent" strokeWidth={3} />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </DashboardCard>
     </div>
