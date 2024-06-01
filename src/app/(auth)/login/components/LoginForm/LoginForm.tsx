@@ -34,7 +34,7 @@ const LoginForm = () => {
   const handleLogin = async ({ login, password }: Values) => {
     try {
       await Api.Employee.login({ login, password })
-      router.push('/dashboard')
+      router.push('/orders')
     } catch (e) {
       toast.error(isAxiosError(e) ? e.response?.data.message ?? 'Auth error' : 'Auth error')
     }
