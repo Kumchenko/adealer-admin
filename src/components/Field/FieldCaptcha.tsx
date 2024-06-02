@@ -19,6 +19,7 @@ export const FieldCaptcha = ({ onChange, onBlur, error, className }: Props) => {
         onChange={onChange}
         onBlur={onBlur}
         sitekey={CAPTCHA_SITE_KEY}
+        hl="en"
       />
       <span className={cn('mt-1 break-words text-center text-red-600', error ? 'block' : 'hidden')}>{error}</span>
     </div>
