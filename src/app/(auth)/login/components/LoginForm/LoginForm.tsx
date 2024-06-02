@@ -1,5 +1,6 @@
 'use client'
 import Api from '@/api'
+import { FieldCaptcha } from '@/components/Field/FieldCaptcha'
 import FieldInput from '@/components/Field/FieldInput'
 import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,6 +13,10 @@ import { z } from 'zod'
 const schema = z.object({
   login: z.string().min(3).max(20),
   password: z.string().min(5).max(64),
+  captchaToken: z
+    .string()
+    .nullable()
+    .refine(arg => !!arg, 'Captcha is required'),
 })
 
 type Values = z.infer<typeof schema>
@@ -28,6 +33,7 @@ const LoginForm = () => {
     defaultValues: {
       login: '',
       password: '',
+      captchaToken: null,
     },
   })
 
@@ -69,6 +75,14 @@ const LoginForm = () => {
             error={error?.message}
             {...props}
           />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="captchaToken"
+        render={({ field: { onChange, onBlur }, fieldState: { error } }) => (
+          <FieldCaptcha className="-left-2 my-2" onChange={onChange} onBlur={onBlur} error={error?.message} />
         )}
       />
 

@@ -13,3 +13,5 @@ export enum Sort {
 }
 
 export const SortOptions = toOptions(Sort)
+
+export const CAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
