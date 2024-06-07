@@ -10,3 +10,4 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({ accessToken })
 }
+export const dynamic = 'force-dynamic'
