@@ -9,7 +9,7 @@ import { debounce } from 'lodash'
 
 const getInternalClient = () => {
   const client = axios.create({
-    baseURL: `./api`,
+    baseURL: `/api`,
     timeout: 1000 * 60,
     withCredentials: true,
   })
