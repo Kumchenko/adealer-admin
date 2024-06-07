@@ -33,7 +33,7 @@ const schema = z.object({
   componentId: z.string(),
   qualityId: z.string(),
   cost: z.number().min(0, "Can't be less 0"),
-  operation: z.nativeEnum(EStatus).nullable(),
+  operation: z.string().nullable().optional(),
 })
 
 type Values = z.infer<typeof schema>
@@ -107,7 +107,7 @@ const OrderForm = ({ order: orderObj }: { order: IOrderRead }) => {
         modelId,
         componentId,
         qualityId,
-        status: operation ?? undefined,
+        status: (operation as EStatus | undefined) ?? undefined,
       },
       { onSuccess: data => reset(data) },
     )
