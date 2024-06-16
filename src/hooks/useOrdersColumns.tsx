@@ -90,6 +90,7 @@ export const useOrdersColumns = (): ColumnDef<IOrderRead>[] => {
           </div>
         )
       },
+      enableSorting: false,
     },
     {
       accessorKey: 'cost',
